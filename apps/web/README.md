@@ -13,6 +13,15 @@ npm run dev
 - Next.js: http://127.0.0.1:3000
 - Static console (existing): http://127.0.0.1:4173 (via `./scripts/run_local_stack.sh`)
 
+## Test
+
+```bash
+cd /Users/murdadrum/QADMS/apps/web
+npm run test:ci
+```
+
+- Covers console persistence flows (recent runs, detail drawer load flow, filter presets).
+
 ## Stack
 - Next.js 15 (App Router)
 - Tailwind CSS

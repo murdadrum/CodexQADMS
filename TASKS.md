@@ -40,7 +40,8 @@ Last updated: 2026-02-09
 | --- | --- | --- | --- | --- | --- | --- |
 | C-01 | Add Storybook source ingestion contract | done | codex | P2 | B-07 | Storybook source object validated and stored |
 | C-02 | Add visual diff pipeline scaffold | done | codex | P2 | C-01 | Baseline/current screenshot diff result generated |
-| C-03 | Add component-level frontend tests for console state and persistence | todo | codex | P2 | B-10 | Recent runs/presets/report UI flows are covered in CI |
+| C-03 | Add component-level frontend tests for console state and persistence | done | codex | P2 | B-10 | Recent runs/presets/report UI flows are covered in CI |
+| C-04 | Add UI diff viewer screen in Next.js for visual diff results | todo | codex | P2 | C-02 | Visual diff endpoint results are browsable in app UI |
 | D-01 | Add CI workflow (`test + smoke`) | done | codex | P1 | A-04 | PR checks run unit + smoke tests automatically |
 | D-02 | Add deploy workflow scaffold | todo | codex | P2 | D-01 | Build/deploy job skeleton committed |
 | D-03 | Add Terraform infra skeleton directories | todo | codex | P2 | D-02 | Cloud modules scaffolded with variables |
@@ -56,6 +57,6 @@ Last updated: 2026-02-09
 | X-03 | Decision on Next.js migration start point for `apps/web` | done | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
-1. C-03 Add component-level frontend tests for console state and persistence.
-2. D-02 Add deploy workflow scaffold.
-3. D-03 Add Terraform infra skeleton directories.
+1. D-02 Add deploy workflow scaffold.
+2. D-03 Add Terraform infra skeleton directories.
+3. C-04 Add UI diff viewer screen in Next.js for visual diff results.
