@@ -8,7 +8,9 @@ Build a production-style QA Design Management System that ingests design tokens/
 ## Success Criteria
 - Token imports work from Tokens Studio-style JSON and FigmaDMS `theme-config.json`.
 - Canonical token model and validation reports are deterministic.
-- Web UI shows import provenance (`source_id`, `version_id`, `imported_at`, `source`).
+- Web UI shows import provenance (`source_id`, `version_id`, `imported_at`, `source`) and violation detail evidence.
+- Import/audit/report actions are auth-gated (Firebase Google) when auth is configured.
+- Web console supports report export plus persisted recent runs and filter presets.
 - Local stack can be started and verified with a one-command smoke test.
 - Repo is ready for expansion into auth, jobs, integrations, and cloud deployment.
 
@@ -17,7 +19,10 @@ In scope now:
 - Figma-centered handoff workflow docs and token contract.
 - FastAPI token import endpoint.
 - Token normalization adapter and tests.
-- Web import/provenance console.
+- Web import/provenance/violation console in Next.js.
+- Firebase Google auth integration for write-action gating.
+- Report export from violations view.
+- Recent-run and filter-preset local persistence.
 - Local dev runner and smoke testing.
 
 Out of scope for current slice:
@@ -55,10 +60,10 @@ Status: In progress
   - Pagination-ready response envelopes for list endpoints.
 
 ### Milestone B: Rule Engine and Core UX
-Status: In progress
+Status: Complete (current scope)
 - Deterministic rules package expansion (`naming`, `scale`, `semantic coverage`, `contrast`).
 - Violation list/detail UI with filtering and severity.
-- Report export endpoints and static report output.
+- Report export endpoints and web-triggered report output.
 
 Progress note:
 - `TOKENS_NAMING` deterministic rule implemented with evidence and machine-friendly fix hints.
@@ -67,6 +72,10 @@ Progress note:
 - `A11Y_CONTRAST` deterministic rule implemented using WCAG AA ratio checks.
 - Violations list UI implemented with live API-backed filtering (severity/category/rule/search).
 - Violation detail panel added with evidence and fix hints.
+- Next.js console migration complete for core import/audit/detail flow.
+- Firebase auth gating added for import/audit/report actions.
+- Report export action added to violations UI.
+- Recent runs + filter presets persisted in local storage with run detail drawer.
 
 ### Milestone C: Components and Visual Regression
 Status: Not started
@@ -97,10 +106,11 @@ Status: Not started
 - Figma registry: `design/figma-links.md`
 - API contract: `apps/api/contracts/figma-import.openapi.yaml`
 - Smoke test: `scripts/smoke_test.sh`
+- UI walkthrough: `Walkthrough.md`
 
 ## Next Decision Gates
 - Approve persistence model for source/version/audit tables. (in progress)
 - Choose first deterministic rule set order for Milestone B. (done)
 - Decide web migration timing from static prototype to full Next.js app scaffold. (done: migrate `apps/web` to Next.js App Router with Tailwind/shadcn, keep static during migration)
 - Auth path decision (done: Firebase Auth with Google first)
-- Next.js scaffold added under `apps/web` (App Router + Tailwind); static console kept during migration.
+- Next.js App Router UI is primary; static console retained as fallback.

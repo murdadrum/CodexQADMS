@@ -29,7 +29,10 @@ Last updated: 2026-02-09
 | B-04 | Implement `A11Y_CONTRAST` rule for color pairs | done | codex | P1 | A-01 | WCAG-based contrast violations produced |
 | B-05 | Build violations list UI (filter by severity/category) | done | codex | P1 | B-01 | UI renders deterministic violations and filters |
 | B-06 | Build violation detail panel (evidence + fix hint) | done | codex | P2 | B-05 | Evidence and fix hints are readable and complete |
-| B-07 | Add report export endpoint (`report.json`) | todo | codex | P2 | B-01 | Canonical report payload downloadable |
+| B-07 | Add report export endpoint (`report.json`) | done | codex | P2 | B-01 | Canonical report payload downloadable |
+| B-08 | Migrate core import/audit UI from static console to Next.js app | done | codex | P1 | B-05 | Next.js console reaches functional parity for import/audit/detail |
+| B-09 | Add Firebase auth gating to import/audit/report actions | done | codex | P1 | B-08 | Unauthenticated users cannot trigger write/report actions |
+| B-10 | Persist recent runs + filter presets in web console | done | codex | P2 | B-08 | State survives refresh and can be restored from UI |
 
 ## Milestone C-D-E Backlog (Planned)
 
@@ -37,6 +40,7 @@ Last updated: 2026-02-09
 | --- | --- | --- | --- | --- | --- | --- |
 | C-01 | Add Storybook source ingestion contract | todo | codex | P2 | B-07 | Storybook source object validated and stored |
 | C-02 | Add visual diff pipeline scaffold | todo | codex | P2 | C-01 | Baseline/current screenshot diff result generated |
+| C-03 | Add component-level frontend tests for console state and persistence | todo | codex | P2 | B-10 | Recent runs/presets/report UI flows are covered in CI |
 | D-01 | Add CI workflow (`test + smoke`) | todo | codex | P1 | A-04 | PR checks run unit + smoke tests automatically |
 | D-02 | Add deploy workflow scaffold | todo | codex | P2 | D-01 | Build/deploy job skeleton committed |
 | D-03 | Add Terraform infra skeleton directories | todo | codex | P2 | D-02 | Cloud modules scaffolded with variables |
@@ -52,6 +56,6 @@ Last updated: 2026-02-09
 | X-03 | Decision on Next.js migration start point for `apps/web` | done | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
-1. B-07 Add report export endpoint (`report.json`).
-2. C-01 Add Storybook source ingestion contract.
+1. C-01 Add Storybook source ingestion contract.
+2. C-03 Add component-level frontend tests for console state and persistence.
 3. C-02 Add visual diff pipeline scaffold.

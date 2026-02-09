@@ -4,6 +4,7 @@ import json
 import unittest
 from pathlib import Path
 
+from apps.api.src.rule_audit_endpoint import post_rule_audit
 from apps.api.src.rule_audit_endpoint import post_rule_report
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +37,19 @@ class RuleReportEndpointTests(unittest.TestCase):
         self.assertEqual(status, 400)
         self.assertIn("error", response)
         self.assertEqual(response["error"]["code"], "invalid_source_id")
+
+    def test_report_matches_audit_summary_and_violations(self) -> None:
+        payload = (FIXTURES / "sample-figma-tokens.json").read_bytes()
+
+        audit_status, audit_response = post_rule_audit("source-report", payload)
+        report_status, report_response = post_rule_report("source-report", payload)
+
+        self.assertEqual(audit_status, 200)
+        self.assertEqual(report_status, 200)
+        self.assertEqual(report_response["source_id"], audit_response["source_id"])
+        self.assertEqual(report_response["summary"], audit_response["summary"])
+        self.assertEqual(report_response["violations"], audit_response["violations"])
+        self.assertIn("generated_at", report_response)
 
 
 if __name__ == "__main__":

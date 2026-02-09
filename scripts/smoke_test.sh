@@ -104,16 +104,20 @@ IMPORT_JSON="$(curl -fsS -X POST "http://$API_HOST:$API_PORT/api/v1/sources/$SOU
 AUDIT_JSON="$(curl -fsS -X POST "http://$API_HOST:$API_PORT/api/v1/sources/$SOURCE_ID/audits/rules" \
   -H 'content-type: application/json' \
   --data-binary "@$PAYLOAD_FILE")"
+REPORT_JSON="$(curl -fsS -X POST "http://$API_HOST:$API_PORT/api/v1/sources/$SOURCE_ID/audits/report" \
+  -H 'content-type: application/json' \
+  --data-binary "@$PAYLOAD_FILE")"
 WEB_HTML="$(curl -fsS "http://$WEB_HOST:$WEB_PORT")"
 
-"$PYTHON_BIN" - <<'PY' "$HEALTH_JSON" "$IMPORT_JSON" "$AUDIT_JSON" "$SOURCE_ID"
+"$PYTHON_BIN" - <<'PY' "$HEALTH_JSON" "$IMPORT_JSON" "$AUDIT_JSON" "$REPORT_JSON" "$SOURCE_ID"
 import json
 import sys
 
 health = json.loads(sys.argv[1])
 import_resp = json.loads(sys.argv[2])
 audit_resp = json.loads(sys.argv[3])
-source_id = sys.argv[4]
+report_resp = json.loads(sys.argv[4])
+source_id = sys.argv[5]
 
 if health.get("status") != "ok":
     raise SystemExit("Health response is not ok")
@@ -142,6 +146,18 @@ if "total_violations" not in summary:
 
 if not isinstance(audit_resp.get("violations", []), list):
     raise SystemExit("Audit violations must be a list")
+
+if report_resp.get("source_id") != source_id:
+    raise SystemExit("Report source_id mismatch")
+
+if "generated_at" not in report_resp:
+    raise SystemExit("Report missing generated_at")
+
+if report_resp.get("summary") != audit_resp.get("summary"):
+    raise SystemExit("Report summary should match audit summary for same payload")
+
+if report_resp.get("violations") != audit_resp.get("violations"):
+    raise SystemExit("Report violations should match audit violations for same payload")
 PY
 
 if ! grep -q "QADMS Token Import Console" <<<"$WEB_HTML"; then

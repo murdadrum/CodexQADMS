@@ -21,6 +21,9 @@ The repository currently includes:
 - Deterministic `A11Y_CONTRAST` rule (WCAG AA text/background ratio checks)
 - Violations list UI with deterministic API-backed filters (`severity`, `category`, `rule`, `search`)
 - Violation detail view with evidence and fix hints
+- Next.js React console with Firebase-auth gated import/audit/report actions
+- Report export UI wired to `POST /api/v1/sources/{source_id}/audits/report`
+- Local persistence for recent runs and filter presets (with recent-run detail drawer)
 - Token normalization adapter for:
   - Tokens Studio-style grouped JSON
   - FigmaDMS `theme-config.json` shape (`colors[]`, `uiTokens`)
@@ -29,7 +32,7 @@ The repository currently includes:
 ## Repository Layout
 
 - `apps/api` API contracts and endpoint handlers
-- `apps/web` frontend app target (scaffold)
+- `apps/web` Next.js frontend (active UI) + static fallback console
 - `packages/contracts` shared token/report contracts
 - `packages/rules` token adapters and rule utilities
 - `design` Figma links, component spec guidance, token handoff artifacts
@@ -42,11 +45,13 @@ The repository currently includes:
 - Task backlog: `TASKS.md`
 - Initial strategy source: `ChatGPTplanning-1.md`
 - Persistence contract draft: `docs/persistence-contract.md`
+- Web walkthrough: `Walkthrough.md`
 
 ## Quick Start (current)
 
 ```bash
-python3 -m unittest -v tests.test_figma_import
+python3 -m unittest -v
+cd apps/web && npm install && npm run build
 ```
 
 ## Smoke Test (API + Web + Import)
@@ -56,6 +61,7 @@ python3 -m unittest -v tests.test_figma_import
 ```
 
 - Uses default ports `18000` (API) and `14173` (web).
+- Verifies import, audit, and report endpoints.
 - Override if needed:
   - `API_PORT=18080 WEB_PORT=14174 ./scripts/smoke_test.sh`
 

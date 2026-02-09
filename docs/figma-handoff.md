@@ -12,6 +12,7 @@ Define how Figma prototypes and component documentation feed QADMS without becom
 4. Commit exports to `design/tokens/figma/`.
 5. Import tokens via API endpoint: `POST /api/v1/sources/{source_id}/tokens/import/figma`.
 6. Review validation report and normalization output.
+7. In web UI, verify violations, export report JSON, and save any useful filter presets.
 
 ## Naming Conventions
 
@@ -44,6 +45,7 @@ Define how Figma prototypes and component documentation feed QADMS without becom
   - `apps/api`
   - `packages/*`
 - Current reference bundle location: `/Users/murdadrum/QADMS/FigmaDMS`.
+- Current implementation UI: `/Users/murdadrum/QADMS/apps/web` (Next.js), static fallback at `/Users/murdadrum/QADMS/apps/web/index.html`.
 
 ## Release Checklist
 
