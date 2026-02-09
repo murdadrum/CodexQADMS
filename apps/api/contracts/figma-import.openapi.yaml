@@ -46,6 +46,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorEnvelope'
+  /api/v1/sources/{source_id}/audits/rules:
+    post:
+      summary: Run deterministic token rules and return violations
+      operationId: postRuleAudit
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Tokens Studio compatible JSON object or FigmaDMS theme-config JSON.
+      responses:
+        '200':
+          description: Audit completed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleAuditResponse'
+        '400':
+          description: Invalid request payload or path parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '500':
+          description: Unexpected server error while running rule audit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
     ErrorBody:
@@ -133,3 +170,74 @@ components:
           $ref: '#/components/schemas/CanonicalTokenModel'
         validation:
           $ref: '#/components/schemas/ValidationReport'
+    RuleAuditViolation:
+      type: object
+      required: [violation_id, rule_id, category, severity, code, title, description, evidence, fix_hint]
+      properties:
+        violation_id:
+          type: string
+        rule_id:
+          type: string
+        category:
+          type: string
+        severity:
+          type: string
+        code:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        evidence:
+          type: object
+          additionalProperties: true
+        fix_hint:
+          type: object
+          additionalProperties: true
+    RuleAuditSummary:
+      type: object
+      required: [total_violations, by_severity, by_category, by_rule]
+      properties:
+        total_violations:
+          type: integer
+        by_severity:
+          type: object
+          additionalProperties:
+            type: integer
+        by_category:
+          type: object
+          additionalProperties:
+            type: integer
+        by_rule:
+          type: object
+          additionalProperties:
+            type: integer
+    RuleAuditNormalization:
+      type: object
+      required: [valid, error_count, warning_count]
+      properties:
+        valid:
+          type: boolean
+        error_count:
+          type: integer
+        warning_count:
+          type: integer
+    RuleAuditResponse:
+      type: object
+      required: [source_id, audit_id, evaluated_at, normalization, summary, violations]
+      properties:
+        source_id:
+          type: string
+        audit_id:
+          type: string
+        evaluated_at:
+          type: string
+          format: date-time
+        normalization:
+          $ref: '#/components/schemas/RuleAuditNormalization'
+        summary:
+          $ref: '#/components/schemas/RuleAuditSummary'
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleAuditViolation'

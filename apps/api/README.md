@@ -9,6 +9,7 @@ Persistence contract draft is documented in `docs/persistence-contract.md`.
 
 - `GET /health`
 - `POST /api/v1/sources/{source_id}/tokens/import/figma`
+- `POST /api/v1/sources/{source_id}/audits/rules`
 
 ## Error Envelope
 

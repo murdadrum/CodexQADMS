@@ -5,8 +5,10 @@ Token import and provenance UI prototype for QADMS.
 ## Features
 
 - Calls `POST /api/v1/sources/{source_id}/tokens/import/figma`
+- Calls `POST /api/v1/sources/{source_id}/audits/rules`
 - Displays provenance fields: `source_id`, `version_id`, `imported_at`, `token_version.source`
 - Shows validation errors/warnings and token summary
+- Renders violations list with client-side filters (`severity`, `category`, `rule`, `search`)
 - Includes a local mock fallback for offline demos
 
 ## Run

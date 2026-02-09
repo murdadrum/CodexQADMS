@@ -101,15 +101,19 @@ HEALTH_JSON="$(curl -fsS "http://$API_HOST:$API_PORT/health")"
 IMPORT_JSON="$(curl -fsS -X POST "http://$API_HOST:$API_PORT/api/v1/sources/$SOURCE_ID/tokens/import/figma" \
   -H 'content-type: application/json' \
   --data-binary "@$PAYLOAD_FILE")"
+AUDIT_JSON="$(curl -fsS -X POST "http://$API_HOST:$API_PORT/api/v1/sources/$SOURCE_ID/audits/rules" \
+  -H 'content-type: application/json' \
+  --data-binary "@$PAYLOAD_FILE")"
 WEB_HTML="$(curl -fsS "http://$WEB_HOST:$WEB_PORT")"
 
-"$PYTHON_BIN" - <<'PY' "$HEALTH_JSON" "$IMPORT_JSON" "$SOURCE_ID"
+"$PYTHON_BIN" - <<'PY' "$HEALTH_JSON" "$IMPORT_JSON" "$AUDIT_JSON" "$SOURCE_ID"
 import json
 import sys
 
 health = json.loads(sys.argv[1])
 import_resp = json.loads(sys.argv[2])
-source_id = sys.argv[3]
+audit_resp = json.loads(sys.argv[3])
+source_id = sys.argv[4]
 
 if health.get("status") != "ok":
     raise SystemExit("Health response is not ok")
@@ -128,6 +132,16 @@ if version.get("source") != "figma_export":
 counts = version.get("token_counts", {})
 if counts.get("color", 0) < 1:
     raise SystemExit("Expected at least one color token")
+
+if audit_resp.get("source_id") != source_id:
+    raise SystemExit("Audit source_id mismatch")
+
+summary = audit_resp.get("summary", {})
+if "total_violations" not in summary:
+    raise SystemExit("Audit summary missing total_violations")
+
+if not isinstance(audit_resp.get("violations", []), list):
+    raise SystemExit("Audit violations must be a list")
 PY
 
 if ! grep -q "QADMS Token Import Console" <<<"$WEB_HTML"; then

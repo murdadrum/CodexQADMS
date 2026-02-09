@@ -65,6 +65,7 @@ Progress note:
 - `TOKENS_SCALE` deterministic rule implemented for spacing/typography anomalies.
 - `TOKENS_SEMANTIC_COVERAGE` deterministic rule implemented for interactive state coverage.
 - `A11Y_CONTRAST` deterministic rule implemented using WCAG AA ratio checks.
+- Violations list UI implemented with live API-backed filtering (severity/category/rule/search).
 
 ### Milestone C: Components and Visual Regression
 Status: Not started

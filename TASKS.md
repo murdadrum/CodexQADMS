@@ -27,7 +27,7 @@ Last updated: 2026-02-09
 | B-02 | Implement `TOKENS_SCALE` deterministic rule | done | codex | P1 | A-01 | Spacing/type scale anomalies are detected |
 | B-03 | Implement `TOKENS_SEMANTIC_COVERAGE` rule | done | codex | P1 | A-01 | Missing state semantics flagged |
 | B-04 | Implement `A11Y_CONTRAST` rule for color pairs | done | codex | P1 | A-01 | WCAG-based contrast violations produced |
-| B-05 | Build violations list UI (filter by severity/category) | todo | codex | P1 | B-01 | UI renders deterministic violations and filters |
+| B-05 | Build violations list UI (filter by severity/category) | done | codex | P1 | B-01 | UI renders deterministic violations and filters |
 | B-06 | Build violation detail panel (evidence + fix hint) | todo | codex | P2 | B-05 | Evidence and fix hints are readable and complete |
 | B-07 | Add report export endpoint (`report.json`) | todo | codex | P2 | B-01 | Canonical report payload downloadable |
 
@@ -52,6 +52,6 @@ Last updated: 2026-02-09
 | X-03 | Decision on Next.js migration start point for `apps/web` | todo | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
-1. B-05 Build violations list UI (filter by severity/category).
-2. B-06 Build violation detail panel (evidence + fix hint).
-3. B-07 Add report export endpoint (`report.json`).
+1. B-06 Build violation detail panel (evidence + fix hint).
+2. B-07 Add report export endpoint (`report.json`).
+3. C-01 Add Storybook source ingestion contract.

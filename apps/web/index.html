@@ -104,6 +104,54 @@
           </table>
         </div>
       </section>
+
+      <section class="panel" id="violationsPanel" hidden>
+        <h2>Violations</h2>
+        <div id="violationSummary" class="chips"></div>
+
+        <div class="grid filters">
+          <label>
+            Severity
+            <select id="filterSeverity">
+              <option value="all">All</option>
+            </select>
+          </label>
+          <label>
+            Category
+            <select id="filterCategory">
+              <option value="all">All</option>
+            </select>
+          </label>
+          <label>
+            Rule
+            <select id="filterRule">
+              <option value="all">All</option>
+            </select>
+          </label>
+          <label>
+            Search
+            <input id="filterSearch" type="text" placeholder="title, code, token path..." />
+          </label>
+        </div>
+
+        <p id="violationMeta" class="status"></p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Severity</th>
+                <th>Category</th>
+                <th>Rule</th>
+                <th>Code</th>
+                <th>Title</th>
+                <th>Evidence</th>
+              </tr>
+            </thead>
+            <tbody id="violationRows"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
     <script type="module" src="./app.js"></script>

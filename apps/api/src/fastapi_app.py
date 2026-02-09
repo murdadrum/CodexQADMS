@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 from .figma_import_endpoint import post_tokens_import_figma
+from .rule_audit_endpoint import post_rule_audit
 
 try:
     from fastapi import Body, FastAPI, Path
@@ -36,6 +37,17 @@ def create_app() -> "FastAPI":
         payload: dict = Body(..., description="Figma/Tokens Studio export JSON"),
     ) -> JSONResponse:
         status_code, response = post_tokens_import_figma(
+            source_id=source_id,
+            request_body=json.dumps(payload).encode("utf-8"),
+        )
+        return JSONResponse(status_code=status_code, content=response)
+
+    @app.post("/api/v1/sources/{source_id}/audits/rules")
+    def run_rule_audit(
+        source_id: str = Path(..., description="Design source identifier"),
+        payload: dict = Body(..., description="Figma/Tokens Studio export JSON"),
+    ) -> JSONResponse:
+        status_code, response = post_rule_audit(
             source_id=source_id,
             request_body=json.dumps(payload).encode("utf-8"),
         )
