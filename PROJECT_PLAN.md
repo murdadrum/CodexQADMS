@@ -96,6 +96,7 @@ Status: In progress
 
 Progress note:
 - GitHub Actions CI workflow added for unit tests, web build, and smoke test.
+- Deploy workflow scaffold added with environment inputs, artifacts, and dry-run safety mode.
 
 ### Milestone E: LLM Add-ons
 Status: In progress
@@ -120,6 +121,7 @@ Progress note:
 - UI walkthrough: `Walkthrough.md`
 - Milestone C-D-E API contract: `apps/api/contracts/milestone-cde.openapi.yaml`
 - CI workflow: `.github/workflows/ci.yml`
+- Deploy scaffold workflow: `.github/workflows/deploy.yml`
 
 ## Next Decision Gates
 - Approve persistence model for source/version/audit tables. (in progress)

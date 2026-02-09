@@ -28,6 +28,7 @@ The repository currently includes:
 - Visual diff scaffold endpoint + contract (`/audits/visual-diff`)
 - LLM explain/fix-suggest contract endpoints for violations
 - CI workflow for Python tests + web build + smoke test
+- Deploy workflow scaffold with manual environment selection and dry-run mode
 - Token normalization adapter for:
   - Tokens Studio-style grouped JSON
   - FigmaDMS `theme-config.json` shape (`colors[]`, `uiTokens`)
