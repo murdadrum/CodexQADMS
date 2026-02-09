@@ -67,6 +67,32 @@ type ReportResult = {
   violations: Violation[];
 };
 
+type RecentRun = {
+  id: string;
+  sourceId: string;
+  timestamp: string;
+  apiBase: string;
+  tokenSource: string;
+  validationValid: boolean;
+  totalViolations: number;
+  payloadText: string;
+};
+
+type FilterPreset = {
+  id: string;
+  name: string;
+  severity: string;
+  category: string;
+  rule: string;
+  search: string;
+  createdAt: string;
+};
+
+const STORAGE_RECENT_RUNS_KEY = "qadms.console.recent_runs.v1";
+const STORAGE_FILTER_PRESETS_KEY = "qadms.console.filter_presets.v1";
+const STORAGE_FILTER_STATE_KEY = "qadms.console.filter_state.v1";
+const MAX_RECENT_RUNS = 8;
+
 const defaultPayload = {
   colors: [
     { name: "Primary", variable: "--primary", hsl: "hsl(160, 65%, 35%)", hex: "#1f936d" },
@@ -223,6 +249,26 @@ function downloadJson(filename: string, payload: unknown) {
   URL.revokeObjectURL(url);
 }
 
+function readStorageJson<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return fallback;
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStorageJson(key: string, payload: unknown) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(payload));
+  } catch {
+    // Ignore storage failures (private mode/quota issues).
+  }
+}
+
 export function ConsolePanel() {
   const auth = getFirebaseAuth();
   const authConfigured = Boolean(auth);
@@ -242,6 +288,9 @@ export function ConsolePanel() {
   const [filterRule, setFilterRule] = useState("all");
   const [filterSearch, setFilterSearch] = useState("");
   const [isExporting, setIsExporting] = useState(false);
+  const [recentRuns, setRecentRuns] = useState<RecentRun[]>([]);
+  const [filterPresets, setFilterPresets] = useState<FilterPreset[]>([]);
+  const [presetName, setPresetName] = useState("");
 
   const violations = auditResult?.violations ?? [];
 
@@ -284,6 +333,37 @@ export function ConsolePanel() {
     const unsubscribe = onAuthStateChanged(auth, (nextUser) => setUser(nextUser));
     return () => unsubscribe();
   }, [auth]);
+
+  useEffect(() => {
+    const storedRuns = readStorageJson<RecentRun[]>(STORAGE_RECENT_RUNS_KEY, []);
+    const storedPresets = readStorageJson<FilterPreset[]>(STORAGE_FILTER_PRESETS_KEY, []);
+    const storedFilterState = readStorageJson<{
+      severity: string;
+      category: string;
+      rule: string;
+      search: string;
+    }>(STORAGE_FILTER_STATE_KEY, {
+      severity: "all",
+      category: "all",
+      rule: "all",
+      search: "",
+    });
+    setRecentRuns(Array.isArray(storedRuns) ? storedRuns : []);
+    setFilterPresets(Array.isArray(storedPresets) ? storedPresets : []);
+    setFilterSeverity(storedFilterState.severity || "all");
+    setFilterCategory(storedFilterState.category || "all");
+    setFilterRule(storedFilterState.rule || "all");
+    setFilterSearch(storedFilterState.search || "");
+  }, []);
+
+  useEffect(() => {
+    writeStorageJson(STORAGE_FILTER_STATE_KEY, {
+      severity: filterSeverity,
+      category: filterCategory,
+      rule: filterRule,
+      search: filterSearch,
+    });
+  }, [filterSeverity, filterCategory, filterRule, filterSearch]);
 
   async function readPayload() {
     if (fileJson) {
@@ -355,8 +435,10 @@ export function ConsolePanel() {
     setStatus("Importing tokens and running rule audit...");
 
     let payload: unknown;
+    let payloadSnapshot = payloadText;
     try {
       payload = await readPayload();
+      payloadSnapshot = JSON.stringify(payload, null, 2);
     } catch (error: any) {
       setStatusTone("error");
       setStatus(`Invalid JSON: ${error?.message || "Failed to parse JSON"}`);
@@ -371,6 +453,7 @@ export function ConsolePanel() {
         const audited = await auditWithApi(nextSourceId, payload);
         setAuditResult(audited);
         setSelectedViolation(null);
+        pushRecentRun(imported, audited, payloadSnapshot);
         if (imported.validation?.valid) {
           setStatusTone("");
           setStatus("Import and rule audit succeeded using live API.");
@@ -388,6 +471,7 @@ export function ConsolePanel() {
         const mockAudited = mockAudit(imported);
         setAuditResult(mockAudited);
         setSelectedViolation(null);
+        pushRecentRun(imported, mockAudited, payloadSnapshot);
         setStatusTone("warn");
         setStatus("Rule audit API unavailable. Showing mock violations from imported tokens.");
         return;
@@ -405,6 +489,7 @@ export function ConsolePanel() {
     setImportResult(localImported);
     setAuditResult(localAudited);
     setSelectedViolation(null);
+    pushRecentRun(localImported, localAudited, payloadSnapshot);
     setStatusTone("warn");
     if (localImported.validation.valid) {
       setStatus("API unavailable. Import and audit simulated locally.");
@@ -423,6 +508,82 @@ export function ConsolePanel() {
     setSelectedViolation(null);
     setStatusTone("");
     setStatus("Default payload loaded.");
+  }
+
+  function pushRecentRun(imported: ImportResult, audited: AuditResult, nextPayloadText: string) {
+    const nextRun: RecentRun = {
+      id: `${imported.version_id}:${audited.audit_id}`,
+      sourceId: imported.source_id,
+      timestamp: audited.evaluated_at || imported.imported_at || new Date().toISOString(),
+      apiBase,
+      tokenSource: imported.token_version?.source || "unknown",
+      validationValid: imported.validation?.valid ?? false,
+      totalViolations: audited.summary?.total_violations ?? 0,
+      payloadText: nextPayloadText,
+    };
+    setRecentRuns((previous) => {
+      const next = [nextRun, ...previous.filter((item) => item.id !== nextRun.id)].slice(0, MAX_RECENT_RUNS);
+      writeStorageJson(STORAGE_RECENT_RUNS_KEY, next);
+      return next;
+    });
+  }
+
+  function loadRecentRun(run: RecentRun) {
+    setSourceId(run.sourceId);
+    setApiBase(run.apiBase || "http://127.0.0.1:8000");
+    setPayloadText(run.payloadText || JSON.stringify(defaultPayload, null, 2));
+    setFileJson(null);
+    setStatusTone("");
+    setStatus(`Loaded recent run from ${new Date(run.timestamp).toLocaleString()}.`);
+  }
+
+  function clearRecentRuns() {
+    setRecentRuns([]);
+    writeStorageJson(STORAGE_RECENT_RUNS_KEY, []);
+  }
+
+  function saveFilterPreset() {
+    const name = presetName.trim();
+    if (!name) {
+      setStatusTone("error");
+      setStatus("Preset name is required.");
+      return;
+    }
+    const nextPreset: FilterPreset = {
+      id: `${Date.now()}`,
+      name,
+      severity: filterSeverity,
+      category: filterCategory,
+      rule: filterRule,
+      search: filterSearch,
+      createdAt: new Date().toISOString(),
+    };
+    setFilterPresets((previous) => {
+      const withoutSameName = previous.filter((item) => item.name.toLowerCase() !== name.toLowerCase());
+      const next = [nextPreset, ...withoutSameName].slice(0, 12);
+      writeStorageJson(STORAGE_FILTER_PRESETS_KEY, next);
+      return next;
+    });
+    setPresetName("");
+    setStatusTone("");
+    setStatus(`Saved filter preset "${name}".`);
+  }
+
+  function applyFilterPreset(preset: FilterPreset) {
+    setFilterSeverity(preset.severity || "all");
+    setFilterCategory(preset.category || "all");
+    setFilterRule(preset.rule || "all");
+    setFilterSearch(preset.search || "");
+    setStatusTone("");
+    setStatus(`Applied filter preset "${preset.name}".`);
+  }
+
+  function deleteFilterPreset(presetId: string) {
+    setFilterPresets((previous) => {
+      const next = previous.filter((item) => item.id !== presetId);
+      writeStorageJson(STORAGE_FILTER_PRESETS_KEY, next);
+      return next;
+    });
   }
 
   async function onExportReport() {
@@ -573,6 +734,45 @@ export function ConsolePanel() {
         >
           {status}
         </p>
+      </section>
+
+      <section className="rounded-2xl border border-line/70 bg-white/90 p-6 shadow-lg space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-xl font-semibold text-ink">Recent Runs</h2>
+          <button
+            onClick={clearRecentRuns}
+            className="rounded-lg border border-line bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm"
+          >
+            Clear
+          </button>
+        </div>
+        {recentRuns.length === 0 && <p className="text-sm text-slate-700">No recent imports yet.</p>}
+        {recentRuns.length > 0 && (
+          <div className="space-y-2">
+            {recentRuns.map((run) => (
+              <div
+                key={run.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-line bg-slate-50 px-3 py-2"
+              >
+                <div className="space-y-1">
+                  <p className="font-mono text-xs text-slate-900">
+                    {run.sourceId} | violations: {run.totalViolations}
+                  </p>
+                  <p className="text-xs text-slate-600">
+                    {new Date(run.timestamp).toLocaleString()} | source: {run.tokenSource} | validation:{" "}
+                    {run.validationValid ? "valid" : "issues"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => loadRecentRun(run)}
+                  className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-sm"
+                >
+                  Load
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {importResult && (
@@ -759,6 +959,36 @@ export function ConsolePanel() {
                 className="rounded-lg border border-line bg-white px-3 py-2 text-sm"
               />
             </label>
+          </div>
+
+          <div className="rounded-lg border border-line bg-slate-50 p-3 space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <input
+                type="text"
+                value={presetName}
+                onChange={(event) => setPresetName(event.target.value)}
+                placeholder="Preset name"
+                className="min-w-[180px] flex-1 rounded-lg border border-line bg-white px-3 py-2 text-sm"
+              />
+              <button onClick={saveFilterPreset} className="rounded-lg bg-brand px-3 py-2 text-xs font-semibold text-white shadow-sm">
+                Save Preset
+              </button>
+            </div>
+            {filterPresets.length === 0 && <p className="text-xs text-slate-600">No saved presets yet.</p>}
+            {filterPresets.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {filterPresets.map((preset) => (
+                  <div key={preset.id} className="flex items-center gap-1 rounded-full border border-line bg-white px-2 py-1">
+                    <button onClick={() => applyFilterPreset(preset)} className="px-1 text-xs font-mono text-slate-800">
+                      {preset.name}
+                    </button>
+                    <button onClick={() => deleteFilterPreset(preset.id)} className="px-1 text-xs text-red-700">
+                      x
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <p className="text-sm text-slate-700">
