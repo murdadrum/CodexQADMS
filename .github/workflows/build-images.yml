@@ -1,0 +1,91 @@
+name: Build Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_id:
+        description: "GCP project id"
+        required: true
+        default: "notional-radio-474312-d4"
+        type: string
+      region:
+        description: "GCP region for Artifact Registry"
+        required: true
+        default: "us-central1"
+        type: string
+      repository:
+        description: "Artifact Registry repo name"
+        required: true
+        default: "qadms"
+        type: string
+      api_tag:
+        description: "API image tag"
+        required: true
+        default: "latest"
+        type: string
+      web_tag:
+        description: "Web image tag"
+        required: true
+        default: "latest"
+        type: string
+      dry_run:
+        description: "Skip push to registry"
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud (OIDC)
+        if: inputs.dry_run != true
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup gcloud
+        if: inputs.dry_run != true
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.project_id }}
+
+      - name: Configure docker auth
+        if: inputs.dry_run != true
+        run: gcloud auth configure-docker "${{ inputs.region }}-docker.pkg.dev" --quiet
+
+      - name: Build API image
+        run: |
+          REGISTRY="${{ inputs.region }}-docker.pkg.dev"
+          REPO="${REGISTRY}/${{ inputs.project_id }}/${{ inputs.repository }}"
+          API_IMAGE="${REPO}/qadms-api:${{ inputs.api_tag }}"
+          echo "API_IMAGE=$API_IMAGE" >> $GITHUB_ENV
+          docker build -f docker/Dockerfile.api -t "$API_IMAGE" .
+
+      - name: Build Web image
+        run: |
+          REGISTRY="${{ inputs.region }}-docker.pkg.dev"
+          REPO="${REGISTRY}/${{ inputs.project_id }}/${{ inputs.repository }}"
+          WEB_IMAGE="${REPO}/qadms-web:${{ inputs.web_tag }}"
+          echo "WEB_IMAGE=$WEB_IMAGE" >> $GITHUB_ENV
+          docker build -f docker/Dockerfile.web -t "$WEB_IMAGE" .
+
+      - name: Push images
+        if: inputs.dry_run != true
+        run: |
+          docker push "$API_IMAGE"
+          docker push "$WEB_IMAGE"
+
+      - name: Dry run summary
+        if: inputs.dry_run == true
+        run: |
+          echo "Dry run enabled. Images were built but not pushed."
+          echo "API image: $API_IMAGE"
+          echo "Web image: $WEB_IMAGE"

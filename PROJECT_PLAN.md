@@ -101,6 +101,7 @@ Progress note:
 - Terraform skeleton directories added (modules + per-environment roots).
 - Deploy workflow wired for GCP Cloud Run with OIDC auth and image-based deploy.
 - GCP IAM + auth setup documented for staging/production.
+- Container image build workflow added for API/web (Artifact Registry).
 
 ### Milestone E: LLM Add-ons
 Status: In progress
@@ -127,6 +128,8 @@ Progress note:
 - CI workflow: `.github/workflows/ci.yml`
 - Deploy scaffold workflow: `.github/workflows/deploy.yml`
 - Terraform skeleton: `infra/terraform/`
+- Image build workflow: `.github/workflows/build-images.yml`
+- Dockerfiles: `docker/Dockerfile.api`, `docker/Dockerfile.web`
 
 ## Next Decision Gates
 - Approve persistence model for source/version/audit tables. (in progress)

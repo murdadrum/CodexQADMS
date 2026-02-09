@@ -39,12 +39,12 @@ on:
       api_image:
         description: "Container image for API (fully qualified)"
         required: true
-        default: "gcr.io/notional-radio-474312-d4/qadms-api:latest"
+        default: "us-central1-docker.pkg.dev/notional-radio-474312-d4/qadms/qadms-api:latest"
         type: string
       web_image:
         description: "Container image for web (fully qualified)"
         required: true
-        default: "gcr.io/notional-radio-474312-d4/qadms-web:latest"
+        default: "us-central1-docker.pkg.dev/notional-radio-474312-d4/qadms/qadms-web:latest"
         type: string
       api_env:
         description: "API env vars as comma-separated KEY=VALUE"

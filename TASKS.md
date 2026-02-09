@@ -49,7 +49,8 @@ Last updated: 2026-02-09
 | D-03 | Add Terraform infra skeleton directories | done | codex | P2 | D-02 | Cloud modules scaffolded with variables |
 | D-04 | Connect deploy workflow to provider secrets + real deploy commands | done | codex | P1 | D-02, D-03 | Manual deploy workflow can publish API/web to target environment |
 | D-05 | Add environment-specific provider auth + IAM setup docs | done | codex | P2 | D-03 | Cloud identity, service accounts, and IAM roles documented |
-| D-06 | Add container build pipeline for API/web images | todo | codex | P1 | D-04 | Images built and pushed from CI/CD |
+| D-06 | Add container build pipeline for API/web images | done | codex | P1 | D-04 | Images built and pushed from CI/CD |
+| D-07 | Add container build cache/attestations for supply chain | todo | codex | P2 | D-06 | Build provenance and cache reuse enabled |
 | E-01 | Add LLM explain endpoint contract | done | codex | P2 | B-06 | Contract defined with deterministic evidence input |
 | E-02 | Add LLM fix suggestion endpoint contract | done | codex | P2 | E-01 | Structured patch response shape finalized |
 
@@ -64,4 +65,4 @@ Last updated: 2026-02-09
 ## Immediate Next 3 Tasks
 1. C-05 Integrate visual diff results with persisted audit history.
 2. C-06 Add visual diff history view with compare links.
-3. D-06 Add container build pipeline for API/web images.
+3. D-07 Add container build cache/attestations for supply chain.

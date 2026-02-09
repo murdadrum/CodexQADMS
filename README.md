@@ -49,6 +49,7 @@ The repository currently includes:
 - `infra/terraform` IaC baseline
 - `docs/deploy-gcp.md` deployment setup guide
 - `docs/iam-gcp.md` IAM + auth setup for staging/production
+- `docs/build-images-gcp.md` image build/push guide
 
 ## Planning and Tracking
 
