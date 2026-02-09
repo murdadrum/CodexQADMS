@@ -36,6 +36,16 @@ The repository currently includes:
 python3 -m unittest -v tests.test_figma_import
 ```
 
+## Smoke Test (API + Web + Import)
+
+```bash
+./scripts/smoke_test.sh
+```
+
+- Uses default ports `18000` (API) and `14173` (web).
+- Override if needed:
+  - `API_PORT=18080 WEB_PORT=14174 ./scripts/smoke_test.sh`
+
 ## Run Local Stack (API + Web)
 
 ```bash
