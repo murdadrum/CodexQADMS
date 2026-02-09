@@ -50,6 +50,7 @@ The repository currently includes:
 - `docs/deploy-gcp.md` deployment setup guide
 - `docs/iam-gcp.md` IAM + auth setup for staging/production
 - `docs/build-images-gcp.md` image build/push guide
+- `docs/security-checklist.md` security preflight checklist
 
 ## Planning and Tracking
 
@@ -90,6 +91,18 @@ pip install -r apps/api/requirements.txt
 - Web UI: `http://127.0.0.1:4173`
 - If either port is busy, override at launch:
   - `API_PORT=18000 WEB_PORT=14173 ./scripts/run_local_stack.sh`
+
+## Firebase Auth (local)
+
+Create `/Users/murdadrum/QADMS/apps/web/.env.local` with:
+
+```bash
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+```
+
+Restart `npm run dev` after adding env vars.
 
 ## Hybrid Workflow Rule
 

@@ -42,4 +42,10 @@ npm run test:ci
   - `NEXT_PUBLIC_FIREBASE_API_KEY`
   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- Example:
+  ```bash
+  NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+  ```
 - When Firebase env vars are set, import/audit/report actions require signed-in user.
