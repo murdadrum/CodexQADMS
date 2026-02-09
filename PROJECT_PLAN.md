@@ -100,6 +100,7 @@ Progress note:
 - Deploy workflow scaffold added with environment inputs, artifacts, and dry-run safety mode.
 - Terraform skeleton directories added (modules + per-environment roots).
 - Deploy workflow wired for GCP Cloud Run with OIDC auth and image-based deploy.
+- GCP IAM + auth setup documented for staging/production.
 
 ### Milestone E: LLM Add-ons
 Status: In progress

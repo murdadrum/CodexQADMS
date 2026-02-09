@@ -48,6 +48,7 @@ The repository currently includes:
 - `.github/workflows` CI workflows
 - `infra/terraform` IaC baseline
 - `docs/deploy-gcp.md` deployment setup guide
+- `docs/iam-gcp.md` IAM + auth setup for staging/production
 
 ## Planning and Tracking
 
