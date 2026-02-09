@@ -30,6 +30,12 @@ The repository currently includes:
 - `docs` handoff and project documentation
 - `tests` importer and rule behavior tests
 
+## Planning and Tracking
+
+- Project plan: `PROJECT_PLAN.md`
+- Task backlog: `TASKS.md`
+- Initial strategy source: `ChatGPTplanning-1.md`
+
 ## Quick Start (current)
 
 ```bash
