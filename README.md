@@ -15,6 +15,7 @@ The repository currently includes:
 
 - Hybrid workflow docs for Codex + Figma handoff
 - Contract for `POST /api/v1/sources/{source_id}/tokens/import/figma`
+- Deterministic `TOKENS_NAMING` rule (violations + evidence + fix hints)
 - Token normalization adapter for:
   - Tokens Studio-style grouped JSON
   - FigmaDMS `theme-config.json` shape (`colors[]`, `uiTokens`)

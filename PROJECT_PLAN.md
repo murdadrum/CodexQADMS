@@ -55,10 +55,13 @@ Status: In progress
   - Pagination-ready response envelopes for list endpoints.
 
 ### Milestone B: Rule Engine and Core UX
-Status: Not started
+Status: In progress
 - Deterministic rules package expansion (`naming`, `scale`, `semantic coverage`, `contrast`).
 - Violation list/detail UI with filtering and severity.
 - Report export endpoints and static report output.
+
+Progress note:
+- `TOKENS_NAMING` deterministic rule implemented with evidence and machine-friendly fix hints.
 
 ### Milestone C: Components and Visual Regression
 Status: Not started

@@ -23,7 +23,7 @@ Last updated: 2026-02-09
 
 | ID | Task | Status | Owner | Priority | Depends On | Done When |
 | --- | --- | --- | --- | --- | --- | --- |
-| B-01 | Implement `TOKENS_NAMING` deterministic rule | todo | codex | P1 | A-01 | Rule emits violations with evidence + fix_hint |
+| B-01 | Implement `TOKENS_NAMING` deterministic rule | done | codex | P1 | A-01 | Rule emits violations with evidence + fix_hint |
 | B-02 | Implement `TOKENS_SCALE` deterministic rule | todo | codex | P1 | A-01 | Spacing/type scale anomalies are detected |
 | B-03 | Implement `TOKENS_SEMANTIC_COVERAGE` rule | todo | codex | P1 | A-01 | Missing state semantics flagged |
 | B-04 | Implement `A11Y_CONTRAST` rule for color pairs | todo | codex | P1 | A-01 | WCAG-based contrast violations produced |
@@ -52,6 +52,6 @@ Last updated: 2026-02-09
 | X-03 | Decision on Next.js migration start point for `apps/web` | todo | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
-1. B-01 Implement `TOKENS_NAMING` deterministic rule.
-2. B-02 Implement `TOKENS_SCALE` deterministic rule.
-3. B-03 Implement `TOKENS_SEMANTIC_COVERAGE` rule.
+1. B-02 Implement `TOKENS_SCALE` deterministic rule.
+2. B-03 Implement `TOKENS_SEMANTIC_COVERAGE` rule.
+3. B-04 Implement `A11Y_CONTRAST` rule for color pairs.
