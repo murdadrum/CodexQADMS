@@ -99,6 +99,8 @@ Status: Not started
 - Smoke test: `scripts/smoke_test.sh`
 
 ## Next Decision Gates
-- Approve persistence model for source/version/audit tables.
-- Choose first deterministic rule set order for Milestone B.
-- Decide web migration timing from static prototype to full Next.js app scaffold.
+- Approve persistence model for source/version/audit tables. (in progress)
+- Choose first deterministic rule set order for Milestone B. (done)
+- Decide web migration timing from static prototype to full Next.js app scaffold. (done: migrate `apps/web` to Next.js App Router with Tailwind/shadcn, keep static during migration)
+- Auth path decision (done: Firebase Auth with Google first)
+- Next.js scaffold added under `apps/web` (App Router + Tailwind); static console kept during migration.

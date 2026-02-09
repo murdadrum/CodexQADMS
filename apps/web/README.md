@@ -1,43 +1,23 @@
-# apps/web
+# apps/web (Next.js)
 
-Token import and provenance UI prototype for QADMS.
+Next.js migration shell for QADMS. Static console remains available at `/index.html` during the transition.
 
-## Features
-
-- Calls `POST /api/v1/sources/{source_id}/tokens/import/figma`
-- Calls `POST /api/v1/sources/{source_id}/audits/rules`
-- Calls `POST /api/v1/sources/{source_id}/audits/report` (report export)
-- Displays provenance fields: `source_id`, `version_id`, `imported_at`, `token_version.source`
-- Shows validation errors/warnings and token summary
-- Renders violations list with client-side filters (`severity`, `category`, `rule`, `search`)
-- Includes a local mock fallback for offline demos
-
-## Run
-
-Preferred (API + web together):
-
-```bash
-cd /Users/murdadrum/QADMS
-./scripts/run_local_stack.sh
-```
-
-If default ports are already in use:
-
-```bash
-cd /Users/murdadrum/QADMS
-API_PORT=18000 WEB_PORT=14173 ./scripts/run_local_stack.sh
-```
-
-Web-only:
+## Run (local)
 
 ```bash
 cd /Users/murdadrum/QADMS/apps/web
-python3 -m http.server 4173
+npm install
+npm run dev
 ```
 
-Open http://127.0.0.1:4173
+- Next.js: http://127.0.0.1:3000
+- Static console (existing): http://127.0.0.1:4173 (via `./scripts/run_local_stack.sh`)
+
+## Stack
+- Next.js 15 (App Router)
+- Tailwind CSS
+- Custom gradient theme (matching current static console feel)
 
 ## Notes
-
-- Keep this UI manually authored and aligned with Figma references.
-- Do not copy generated design-tool code directly into production paths.
+- Keep static files for now (`index.html`, `app.js`, `styles.css`) until the React version reaches feature parity.
+- Firebase Auth (Google) will be wired next.

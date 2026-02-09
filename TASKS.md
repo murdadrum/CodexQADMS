@@ -48,8 +48,8 @@ Last updated: 2026-02-09
 | ID | Input | Status | Owner | Needed For |
 | --- | --- | --- | --- | --- |
 | X-01 | Final Figma component-state docs for all core components | in_progress | murdadrum | B-05, B-06 |
-| X-02 | Decision on first production auth path (Firebase exact flow) | todo | murdadrum | D-series planning |
-| X-03 | Decision on Next.js migration start point for `apps/web` | todo | murdadrum | B-series UI implementation |
+| X-02 | Decision on first production auth path (Firebase exact flow) | done | murdadrum | D-series planning |
+| X-03 | Decision on Next.js migration start point for `apps/web` | done | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
 1. B-07 Add report export endpoint (`report.json`).

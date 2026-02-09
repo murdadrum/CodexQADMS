@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f4f6f4;
+  --ink: #0f241e;
+  --line: #d3ded5;
+  --brand: #1f936d;
+  --brand-soft: #ecf6df;
+  --brand-accent: #f7d4da;
+  --glow: 120, 67%, 82%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(31, 147, 109, 0.12), transparent 40%),
+    radial-gradient(circle at 90% 0%, rgba(247, 212, 218, 0.28), transparent 35%),
+    var(--bg);
+}
+
+code {
+  @apply rounded bg-slate-100 px-1 py-[2px] text-xs font-mono text-slate-800;
+}
+
+.bg-page {
+  background:
+    radial-gradient(circle at 10% 10%, rgba(31, 147, 109, 0.12), transparent 40%),
+    radial-gradient(circle at 90% 0%, rgba(247, 212, 218, 0.28), transparent 35%),
+    var(--bg);
+}
+
+.text-ink {
+  color: var(--ink);
+}
+
+.border-line {
+  border-color: var(--line);
+}
