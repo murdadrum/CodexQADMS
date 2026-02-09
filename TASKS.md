@@ -44,8 +44,9 @@ Last updated: 2026-02-09
 | C-04 | Add UI diff viewer screen in Next.js for visual diff results | todo | codex | P2 | C-02 | Visual diff endpoint results are browsable in app UI |
 | D-01 | Add CI workflow (`test + smoke`) | done | codex | P1 | A-04 | PR checks run unit + smoke tests automatically |
 | D-02 | Add deploy workflow scaffold | done | codex | P2 | D-01 | Build/deploy job skeleton committed |
-| D-03 | Add Terraform infra skeleton directories | todo | codex | P2 | D-02 | Cloud modules scaffolded with variables |
+| D-03 | Add Terraform infra skeleton directories | done | codex | P2 | D-02 | Cloud modules scaffolded with variables |
 | D-04 | Connect deploy workflow to provider secrets + real deploy commands | todo | codex | P1 | D-02, D-03 | Manual deploy workflow can publish API/web to target environment |
+| D-05 | Add environment-specific provider auth + IAM setup docs | todo | codex | P2 | D-03 | Cloud identity, service accounts, and IAM roles documented |
 | E-01 | Add LLM explain endpoint contract | done | codex | P2 | B-06 | Contract defined with deterministic evidence input |
 | E-02 | Add LLM fix suggestion endpoint contract | done | codex | P2 | E-01 | Structured patch response shape finalized |
 
@@ -58,6 +59,6 @@ Last updated: 2026-02-09
 | X-03 | Decision on Next.js migration start point for `apps/web` | done | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
-1. D-03 Add Terraform infra skeleton directories.
-2. C-04 Add UI diff viewer screen in Next.js for visual diff results.
-3. D-04 Connect deploy workflow to provider secrets + real deploy commands.
+1. C-04 Add UI diff viewer screen in Next.js for visual diff results.
+2. D-04 Connect deploy workflow to provider secrets + real deploy commands.
+3. D-05 Add environment-specific provider auth + IAM setup docs.

@@ -29,6 +29,7 @@ The repository currently includes:
 - LLM explain/fix-suggest contract endpoints for violations
 - CI workflow for Python tests + web build + smoke test
 - Deploy workflow scaffold with manual environment selection and dry-run mode
+- Terraform skeleton for Cloud Run-style deployments (`infra/terraform`)
 - Token normalization adapter for:
   - Tokens Studio-style grouped JSON
   - FigmaDMS `theme-config.json` shape (`colors[]`, `uiTokens`)
@@ -44,6 +45,7 @@ The repository currently includes:
 - `docs` handoff and project documentation
 - `tests` importer and rule behavior tests
 - `.github/workflows` CI workflows
+- `infra/terraform` IaC baseline
 
 ## Planning and Tracking
 

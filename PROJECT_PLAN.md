@@ -97,6 +97,7 @@ Status: In progress
 Progress note:
 - GitHub Actions CI workflow added for unit tests, web build, and smoke test.
 - Deploy workflow scaffold added with environment inputs, artifacts, and dry-run safety mode.
+- Terraform skeleton directories added (modules + per-environment roots).
 
 ### Milestone E: LLM Add-ons
 Status: In progress
@@ -122,6 +123,7 @@ Progress note:
 - Milestone C-D-E API contract: `apps/api/contracts/milestone-cde.openapi.yaml`
 - CI workflow: `.github/workflows/ci.yml`
 - Deploy scaffold workflow: `.github/workflows/deploy.yml`
+- Terraform skeleton: `infra/terraform/`
 
 ## Next Decision Gates
 - Approve persistence model for source/version/audit tables. (in progress)

@@ -1,0 +1,6 @@
+terraform {
+  backend "gcs" {
+    bucket = "qadms-tfstate-production"
+    prefix = "terraform/state"
+  }
+}

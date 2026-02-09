@@ -1,0 +1,13 @@
+project_id = "qadms-staging"
+region     = "us-central1"
+
+api_image = "gcr.io/qadms-staging/qadms-api:latest"
+web_image = "gcr.io/qadms-staging/qadms-web:latest"
+
+api_env_vars = {
+  QADMS_ENV = "staging"
+}
+
+web_env_vars = {
+  NEXT_PUBLIC_API_BASE = "https://api-staging.example.com"
+}
