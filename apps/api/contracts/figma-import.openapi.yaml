@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: QADMS Figma Token Import API
+  version: 0.1.0
+paths:
+  /api/v1/sources/{source_id}/tokens/import/figma:
+    post:
+      summary: Import Figma/Tokens Studio token export
+      operationId: postTokensImportFigma
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Tokens Studio compatible JSON object or FigmaDMS theme-config JSON.
+      responses:
+        '200':
+          description: Import succeeded and tokens were normalized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResponse'
+        '422':
+          description: Import payload is syntactically valid JSON but fails token validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResponse'
+components:
+  schemas:
+    ValidationIssue:
+      type: object
+      required: [path, message]
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+    ValidationReport:
+      type: object
+      required: [valid, errors, warnings]
+      properties:
+        valid:
+          type: boolean
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationIssue'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationIssue'
+    CanonicalToken:
+      type: object
+      required: [group, path, name, token_type, value, source]
+      properties:
+        group:
+          type: string
+        path:
+          type: string
+        name:
+          type: string
+        token_type:
+          type: string
+        value: {}
+        source:
+          type: string
+          enum: [figma_export]
+    CanonicalTokenModel:
+      type: object
+      required: [source, tokens, token_counts]
+      properties:
+        source:
+          type: string
+          enum: [figma_export]
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/CanonicalToken'
+        token_counts:
+          type: object
+          additionalProperties:
+            type: integer
+    ImportResponse:
+      type: object
+      required: [source_id, version_id, imported_at, token_version, validation]
+      properties:
+        source_id:
+          type: string
+        version_id:
+          type: string
+        imported_at:
+          type: string
+          format: date-time
+        token_version:
+          $ref: '#/components/schemas/CanonicalTokenModel'
+        validation:
+          $ref: '#/components/schemas/ValidationReport'

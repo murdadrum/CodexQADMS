@@ -1,0 +1,38 @@
+{
+  "colors": [
+    {
+      "name": "Primary",
+      "variable": "--primary",
+      "hsl": "hsl(160, 65%, 35%)",
+      "hex": "#1f936d"
+    },
+    {
+      "name": "Secondary",
+      "variable": "--secondary",
+      "hsl": "hsl(85, 55%, 92%)",
+      "hex": "#ecf6df"
+    },
+    {
+      "name": "Accent",
+      "variable": "--accent",
+      "hsl": "hsl(350, 70%, 90%)",
+      "hex": "#f7d4da"
+    },
+    {
+      "name": "Destructive",
+      "variable": "--destructive",
+      "hsl": "hsl(10, 80%, 50%)",
+      "hex": "#e63c19"
+    },
+    {
+      "name": "Muted",
+      "variable": "--muted",
+      "hsl": "hsl(120, 30%, 93%)",
+      "hex": "#e8f3e8"
+    }
+  ],
+  "uiTokens": {
+    "radius": 12,
+    "fontSize": 16
+  }
+}

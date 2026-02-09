@@ -1,0 +1,58 @@
+{
+  "color": {
+    "bg": {
+      "canvas": {
+        "$value": "#ffffff",
+        "$type": "color"
+      }
+    },
+    "text": {
+      "primary": {
+        "$value": "#111827",
+        "$type": "color"
+      }
+    }
+  },
+  "spacing": {
+    "100": {
+      "$value": "4",
+      "$type": "dimension"
+    },
+    "200": {
+      "$value": "8",
+      "$type": "dimension"
+    }
+  },
+  "typography": {
+    "body": {
+      "sm": {
+        "fontSize": {
+          "$value": "14",
+          "$type": "dimension"
+        },
+        "lineHeight": {
+          "$value": "20",
+          "$type": "dimension"
+        }
+      }
+    }
+  },
+  "radius": {
+    "sm": {
+      "$value": "4",
+      "$type": "dimension"
+    }
+  },
+  "shadow": {
+    "card": {
+      "$value": "0 1px 3px rgba(0,0,0,0.1)",
+      "$type": "shadow"
+    }
+  },
+  "motion": {
+    "fast": {
+      "$value": "120ms",
+      "$type": "duration"
+    }
+  }
+}
