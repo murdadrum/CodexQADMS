@@ -12,8 +12,8 @@ Last updated: 2026-02-09
 
 | ID | Task | Status | Owner | Priority | Depends On | Done When |
 | --- | --- | --- | --- | --- | --- | --- |
-| A-01 | Finalize source/version persistence contract (DB schema + API mapping) | todo | codex | P1 | none | Schema draft and API response mapping approved |
-| A-02 | Add persistence adapter for token imports (file/in-memory placeholder -> DB-ready interface) | todo | codex | P1 | A-01 | Import endpoint stores version metadata through adapter |
+| A-01 | Finalize source/version persistence contract (DB schema + API mapping) | done | codex | P1 | none | Schema draft and API response mapping approved |
+| A-02 | Add persistence adapter for token imports (file/in-memory placeholder -> DB-ready interface) | done | codex | P1 | A-01 | Import endpoint stores version metadata through adapter |
 | A-03 | Harden API error envelope for import endpoint | todo | codex | P2 | none | All error paths return stable machine-readable shape |
 | A-04 | Add endpoint-level tests for malformed payload variants | todo | codex | P2 | none | Tests cover invalid JSON, wrong root types, invalid leaf shapes |
 | A-05 | Wire web UI to prefer live API and clearly show fallback mode | done | codex | P2 | none | UI indicates API path vs mock path in status |
@@ -52,6 +52,6 @@ Last updated: 2026-02-09
 | X-03 | Decision on Next.js migration start point for `apps/web` | todo | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
-1. A-01 Finalize source/version persistence contract.
-2. A-02 Add persistence adapter behind import endpoint.
-3. A-04 Add malformed payload coverage tests.
+1. A-03 Harden API error envelope for import endpoint.
+2. A-04 Add malformed payload coverage tests.
+3. B-01 Implement `TOKENS_NAMING` deterministic rule.

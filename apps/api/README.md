@@ -3,6 +3,7 @@
 API contracts and implementation for QADMS.
 
 Current scope includes Figma token import contract and normalization adapter integration.
+Persistence contract draft is documented in `docs/persistence-contract.md`.
 
 ## Endpoints
 

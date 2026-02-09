@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import unittest
+from hashlib import sha256
 from pathlib import Path
 
 from apps.api.src.figma_import_endpoint import post_tokens_import_figma
+from apps.api.src.persistence import InMemoryTokenImportStore
 from packages.contracts import CanonicalToken, CanonicalTokenModel
 from packages.rules.demo_rule import evaluate_token_coverage
 
@@ -76,6 +78,33 @@ class FigmaImportTests(unittest.TestCase):
         self.assertGreaterEqual(counts.get("color", 0), 1)
         self.assertGreaterEqual(counts.get("radius", 0), 1)
         self.assertGreaterEqual(counts.get("typography", 0), 1)
+
+    def test_import_response_metadata_is_mapped_from_persistence_contract(self) -> None:
+        payload = (FIXTURES / "theme-config.json").read_bytes()
+        store = InMemoryTokenImportStore()
+
+        status, response = post_tokens_import_figma("source-persist", payload, import_store=store)
+
+        self.assertEqual(status, 200)
+        versions = store.list_versions_for_source("source-persist")
+        self.assertEqual(len(versions), 1)
+        persisted = versions[0]
+        self.assertEqual(response["version_id"], persisted.version_id)
+        self.assertEqual(response["imported_at"], persisted.imported_at)
+        self.assertEqual(response["source_id"], persisted.source_id)
+
+    def test_persistence_contract_stores_hash_and_counts(self) -> None:
+        payload = (FIXTURES / "theme-config.json").read_bytes()
+        store = InMemoryTokenImportStore()
+
+        _, response = post_tokens_import_figma("source-hash", payload, import_store=store)
+
+        versions = store.list_versions_for_source("source-hash")
+        self.assertEqual(len(versions), 1)
+        persisted = versions[0]
+        self.assertEqual(persisted.input_sha256, sha256(payload).hexdigest())
+        self.assertEqual(persisted.token_counts, response["token_version"]["token_counts"])
+        self.assertTrue(persisted.validation_valid)
 
 
 if __name__ == "__main__":

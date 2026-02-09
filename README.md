@@ -35,6 +35,7 @@ The repository currently includes:
 - Project plan: `PROJECT_PLAN.md`
 - Task backlog: `TASKS.md`
 - Initial strategy source: `ChatGPTplanning-1.md`
+- Persistence contract draft: `docs/persistence-contract.md`
 
 ## Quick Start (current)
 

@@ -43,6 +43,8 @@ Status: In progress
   - Hybrid workflow docs and Figma link registry.
   - Token fixtures including `theme-config.json`.
   - Import endpoint contract and implementation.
+  - Persistence contract draft (schema + API mapping).
+  - DB-ready in-memory import persistence adapter and endpoint mapping.
   - Normalization adapter with validation reporting.
   - Unit tests for valid/invalid import and canonical parity.
   - Web provenance console.
