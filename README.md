@@ -18,6 +18,7 @@ The repository currently includes:
 - Deterministic `TOKENS_NAMING` rule (violations + evidence + fix hints)
 - Deterministic `TOKENS_SCALE` rule (spacing/typography anomaly detection)
 - Deterministic `TOKENS_SEMANTIC_COVERAGE` rule (interactive state coverage)
+- Deterministic `A11Y_CONTRAST` rule (WCAG AA text/background ratio checks)
 - Token normalization adapter for:
   - Tokens Studio-style grouped JSON
   - FigmaDMS `theme-config.json` shape (`colors[]`, `uiTokens`)

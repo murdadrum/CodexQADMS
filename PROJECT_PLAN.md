@@ -64,6 +64,7 @@ Progress note:
 - `TOKENS_NAMING` deterministic rule implemented with evidence and machine-friendly fix hints.
 - `TOKENS_SCALE` deterministic rule implemented for spacing/typography anomalies.
 - `TOKENS_SEMANTIC_COVERAGE` deterministic rule implemented for interactive state coverage.
+- `A11Y_CONTRAST` deterministic rule implemented using WCAG AA ratio checks.
 
 ### Milestone C: Components and Visual Regression
 Status: Not started
