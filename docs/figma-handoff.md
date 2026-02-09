@@ -43,7 +43,7 @@ Define how Figma prototypes and component documentation feed QADMS without becom
   - `apps/web`
   - `apps/api`
   - `packages/*`
-- Current reference bundle location: `/Users/murdadrum/CodexQADMS/FigmaDMS`.
+- Current reference bundle location: `/Users/murdadrum/QADMS/FigmaDMS`.
 
 ## Release Checklist
 

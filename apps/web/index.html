@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QADMS Token Import Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <header class="hero">
+        <p class="kicker">QADMS</p>
+        <h1>Token Import Console</h1>
+        <p class="subhead">
+          Import Figma/Tokens Studio exports into the canonical token model and inspect provenance metadata.
+        </p>
+      </header>
+
+      <section class="panel">
+        <h2>Import Request</h2>
+        <div class="grid two">
+          <label>
+            Source ID
+            <input id="sourceId" type="text" value="source-theme" />
+          </label>
+          <label>
+            API Base URL
+            <input id="apiBase" type="url" value="http://127.0.0.1:8000" />
+          </label>
+        </div>
+
+        <label class="inline">
+          <input id="useMockFallback" type="checkbox" checked />
+          Use local mock importer if API is unavailable
+        </label>
+
+        <label>
+          Token JSON file (optional)
+          <input id="fileInput" type="file" accept=".json,application/json" />
+        </label>
+
+        <label>
+          JSON payload (used when no file is selected)
+          <textarea id="payload" rows="12"></textarea>
+        </label>
+
+        <div class="actions">
+          <button id="importBtn" type="button">Import Tokens</button>
+          <button id="resetBtn" type="button" class="ghost">Load Default Payload</button>
+        </div>
+
+        <p id="status" class="status">Ready.</p>
+      </section>
+
+      <section class="panel" id="provenancePanel" hidden>
+        <h2>Provenance</h2>
+        <dl class="provenance">
+          <div>
+            <dt>Source ID</dt>
+            <dd id="provSourceId">-</dd>
+          </div>
+          <div>
+            <dt>Version ID</dt>
+            <dd id="provVersionId">-</dd>
+          </div>
+          <div>
+            <dt>Imported At</dt>
+            <dd id="provImportedAt">-</dd>
+          </div>
+          <div>
+            <dt>Token Source</dt>
+            <dd id="provTokenSource">-</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="panel" id="validationPanel" hidden>
+        <h2>Validation</h2>
+        <div class="grid two">
+          <article>
+            <h3>Errors</h3>
+            <ul id="errorList"></ul>
+          </article>
+          <article>
+            <h3>Warnings</h3>
+            <ul id="warningList"></ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="tokensPanel" hidden>
+        <h2>Token Summary</h2>
+        <div id="counts" class="chips"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Path</th>
+                <th>Type</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody id="tokenRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

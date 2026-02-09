@@ -1,4 +1,4 @@
-# CodexQADMS
+# QADMS
 
 QA Design Management System (QADMS): a full-stack platform for auditing design tokens and component systems for consistency, accessibility, and quality.
 

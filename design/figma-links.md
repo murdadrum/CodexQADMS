@@ -18,7 +18,7 @@ Use this file as the canonical index for QADMS design assets.
 | --- | --- | --- |
 | Live prototype/site | https://qadms.figma.site/ | Product and flow reference |
 | Figma design file | https://www.figma.com/design/jWro4tf6WHjdI63Jpli2sY/Design-Management-System | Component and layout source |
-| Local code bundle | `/Users/murdadrum/CodexQADMS/FigmaDMS` | Reference only, manual porting required |
+| Local code bundle | `/Users/murdadrum/QADMS/FigmaDMS` | Reference only, manual porting required |
 
 ## Notes
 
