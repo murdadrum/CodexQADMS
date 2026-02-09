@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { getFirebaseAuth } from "../lib/firebase";
 
 type ValidationIssue = {
   path: string;
@@ -194,11 +196,14 @@ function mockAudit(importResult: ImportResult): AuditResult {
 }
 
 export function ConsolePanel() {
+  const auth = getFirebaseAuth();
+  const authConfigured = Boolean(auth);
   const [sourceId, setSourceId] = useState("source-theme");
   const [apiBase, setApiBase] = useState("http://127.0.0.1:8000");
   const [useMockFallback, setUseMockFallback] = useState(true);
   const [payloadText, setPayloadText] = useState(JSON.stringify(defaultPayload, null, 2));
   const [fileJson, setFileJson] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState("Ready.");
   const [statusTone, setStatusTone] = useState<"" | "error" | "warn">("");
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
@@ -243,6 +248,13 @@ export function ConsolePanel() {
     [violations],
   );
   const ruleOptions = useMemo(() => [...new Set(violations.map((violation) => violation.rule_id))].sort(), [violations]);
+  const importDisabled = authConfigured && !user;
+
+  useEffect(() => {
+    if (!auth) return;
+    const unsubscribe = onAuthStateChanged(auth, (nextUser) => setUser(nextUser));
+    return () => unsubscribe();
+  }, [auth]);
 
   async function readPayload() {
     if (fileJson) {
@@ -282,6 +294,12 @@ export function ConsolePanel() {
   }
 
   async function onImport() {
+    if (importDisabled) {
+      setStatusTone("error");
+      setStatus("Sign in with Google before importing tokens or running audits.");
+      return;
+    }
+
     const nextSourceId = sourceId.trim();
     if (!nextSourceId) {
       setStatusTone("error");
@@ -427,7 +445,14 @@ export function ConsolePanel() {
         </label>
 
         <div className="flex flex-wrap gap-2">
-          <button onClick={onImport} className="rounded-lg bg-brand px-3 py-2 text-sm font-semibold text-white shadow-sm">
+          <button
+            onClick={onImport}
+            disabled={importDisabled}
+            className={[
+              "rounded-lg px-3 py-2 text-sm font-semibold shadow-sm",
+              importDisabled ? "cursor-not-allowed bg-slate-300 text-slate-600" : "bg-brand text-white",
+            ].join(" ")}
+          >
             Import Tokens
           </button>
           <button
@@ -437,6 +462,11 @@ export function ConsolePanel() {
             Load Default Payload
           </button>
         </div>
+        {authConfigured && !user && (
+          <p className="text-sm text-amber-700">
+            Auth gate active: sign in from the Auth panel before running import or audit actions.
+          </p>
+        )}
 
         <p
           className={[
