@@ -78,21 +78,31 @@ Progress note:
 - Recent runs + filter presets persisted in local storage with run detail drawer.
 
 ### Milestone C: Components and Visual Regression
-Status: Not started
+Status: In progress
 - Storybook ingestion path.
 - Baseline vs current screenshot capture and diff evaluation.
 - UI diff viewer.
 
+Progress note:
+- Storybook source ingestion contract + endpoint scaffold added.
+- Visual diff audit scaffold endpoint added with deterministic diff summary response.
+
 ### Milestone D: Integrations and CI/CD/Infra
-Status: Not started
+Status: In progress
 - GitHub integration and PR check reporting.
 - CI workflows for test/build/e2e.
 - Terraform baseline for Cloud Run stack.
 
+Progress note:
+- GitHub Actions CI workflow added for unit tests, web build, and smoke test.
+
 ### Milestone E: LLM Add-ons
-Status: Not started
+Status: In progress
 - Explanation and fix-suggestion endpoints.
 - Structured output contracts and evidence-bound prompts.
+
+Progress note:
+- LLM contract scaffolds added for violation explanation and fix suggestion endpoints.
 
 ## Risks and Mitigations
 - Port conflicts in local dev: solved with configurable ports and fail-fast checks.
@@ -107,6 +117,8 @@ Status: Not started
 - API contract: `apps/api/contracts/figma-import.openapi.yaml`
 - Smoke test: `scripts/smoke_test.sh`
 - UI walkthrough: `Walkthrough.md`
+- Milestone C-D-E API contract: `apps/api/contracts/milestone-cde.openapi.yaml`
+- CI workflow: `.github/workflows/ci.yml`
 
 ## Next Decision Gates
 - Approve persistence model for source/version/audit tables. (in progress)

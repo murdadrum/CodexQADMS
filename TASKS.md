@@ -38,14 +38,14 @@ Last updated: 2026-02-09
 
 | ID | Task | Status | Owner | Priority | Depends On | Done When |
 | --- | --- | --- | --- | --- | --- | --- |
-| C-01 | Add Storybook source ingestion contract | todo | codex | P2 | B-07 | Storybook source object validated and stored |
-| C-02 | Add visual diff pipeline scaffold | todo | codex | P2 | C-01 | Baseline/current screenshot diff result generated |
+| C-01 | Add Storybook source ingestion contract | done | codex | P2 | B-07 | Storybook source object validated and stored |
+| C-02 | Add visual diff pipeline scaffold | done | codex | P2 | C-01 | Baseline/current screenshot diff result generated |
 | C-03 | Add component-level frontend tests for console state and persistence | todo | codex | P2 | B-10 | Recent runs/presets/report UI flows are covered in CI |
-| D-01 | Add CI workflow (`test + smoke`) | todo | codex | P1 | A-04 | PR checks run unit + smoke tests automatically |
+| D-01 | Add CI workflow (`test + smoke`) | done | codex | P1 | A-04 | PR checks run unit + smoke tests automatically |
 | D-02 | Add deploy workflow scaffold | todo | codex | P2 | D-01 | Build/deploy job skeleton committed |
 | D-03 | Add Terraform infra skeleton directories | todo | codex | P2 | D-02 | Cloud modules scaffolded with variables |
-| E-01 | Add LLM explain endpoint contract | todo | codex | P2 | B-06 | Contract defined with deterministic evidence input |
-| E-02 | Add LLM fix suggestion endpoint contract | todo | codex | P2 | E-01 | Structured patch response shape finalized |
+| E-01 | Add LLM explain endpoint contract | done | codex | P2 | B-06 | Contract defined with deterministic evidence input |
+| E-02 | Add LLM fix suggestion endpoint contract | done | codex | P2 | E-01 | Structured patch response shape finalized |
 
 ## External Inputs Needed
 
@@ -56,6 +56,6 @@ Last updated: 2026-02-09
 | X-03 | Decision on Next.js migration start point for `apps/web` | done | murdadrum | B-series UI implementation |
 
 ## Immediate Next 3 Tasks
-1. C-01 Add Storybook source ingestion contract.
-2. C-03 Add component-level frontend tests for console state and persistence.
-3. C-02 Add visual diff pipeline scaffold.
+1. C-03 Add component-level frontend tests for console state and persistence.
+2. D-02 Add deploy workflow scaffold.
+3. D-03 Add Terraform infra skeleton directories.

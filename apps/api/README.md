@@ -11,6 +11,13 @@ Persistence contract draft is documented in `docs/persistence-contract.md`.
 - `POST /api/v1/sources/{source_id}/tokens/import/figma`
 - `POST /api/v1/sources/{source_id}/audits/rules`
 - `POST /api/v1/sources/{source_id}/audits/report`
+- `POST /api/v1/sources/{source_id}/storybook/import`
+- `POST /api/v1/sources/{source_id}/audits/visual-diff`
+- `POST /api/v1/sources/{source_id}/violations/explain`
+- `POST /api/v1/sources/{source_id}/violations/fix-suggest`
+
+Additional contract file for C-D-E scaffolds:
+- `apps/api/contracts/milestone-cde.openapi.yaml`
 
 ## Error Envelope
 

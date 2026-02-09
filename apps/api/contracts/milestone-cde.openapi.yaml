@@ -1,0 +1,332 @@
+openapi: 3.0.3
+info:
+  title: QADMS Milestone C-D-E Contracts
+  version: 0.1.0
+paths:
+  /api/v1/sources/{source_id}/storybook/import:
+    post:
+      summary: Import Storybook source metadata and component stories
+      operationId: postStorybookSourceImport
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorybookImportRequest'
+      responses:
+        '200':
+          description: Storybook source validated and stored.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorybookImportResponse'
+        '400':
+          description: Invalid request payload or path parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /api/v1/sources/{source_id}/audits/visual-diff:
+    post:
+      summary: Run visual diff scaffold audit for baseline/current snapshots
+      operationId: postVisualDiffAudit
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisualDiffRequest'
+      responses:
+        '200':
+          description: Visual diff scaffold completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisualDiffResponse'
+        '400':
+          description: Invalid request payload or path parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /api/v1/sources/{source_id}/violations/explain:
+    post:
+      summary: LLM explanation contract for a violation
+      operationId: postViolationExplain
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LlmViolationRequest'
+      responses:
+        '200':
+          description: Explanation contract response generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViolationExplainResponse'
+        '400':
+          description: Invalid request payload or path parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+  /api/v1/sources/{source_id}/violations/fix-suggest:
+    post:
+      summary: LLM fix suggestion contract for a violation
+      operationId: postViolationFixSuggest
+      parameters:
+        - in: path
+          name: source_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LlmViolationRequest'
+      responses:
+        '200':
+          description: Fix suggestion contract response generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViolationFixSuggestResponse'
+        '400':
+          description: Invalid request payload or path parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+
+components:
+  schemas:
+    ErrorBody:
+      type: object
+      required: [code, message, details]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorBody'
+
+    StorybookComponent:
+      type: object
+      required: [component_id, stories]
+      properties:
+        component_id:
+          type: string
+        title:
+          type: string
+        stories:
+          type: array
+          items:
+            type: string
+    StorybookImportRequest:
+      type: object
+      required: [storybook_url, components]
+      properties:
+        storybook_url:
+          type: string
+        build_artifact_url:
+          type: string
+        version_label:
+          type: string
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorybookComponent'
+        metadata:
+          type: object
+          additionalProperties: true
+    StorybookImportResponse:
+      type: object
+      required:
+        [source_id, ingestion_id, imported_at, storybook_url, component_count, story_count, components, metadata]
+      properties:
+        source_id:
+          type: string
+        ingestion_id:
+          type: string
+        imported_at:
+          type: string
+          format: date-time
+        storybook_url:
+          type: string
+        build_artifact_url:
+          type: string
+          nullable: true
+        version_label:
+          type: string
+        component_count:
+          type: integer
+        story_count:
+          type: integer
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorybookComponent'
+        metadata:
+          type: object
+          additionalProperties: true
+
+    VisualDiffRequest:
+      type: object
+      required: [baseline_snapshot, current_snapshot]
+      properties:
+        baseline_snapshot:
+          type: string
+        current_snapshot:
+          type: string
+        baseline_ref:
+          type: string
+        current_ref:
+          type: string
+        threshold:
+          type: number
+          minimum: 0
+          maximum: 1
+    VisualDiffResponse:
+      type: object
+      required: [source_id, diff_id, evaluated_at, status, summary, artifacts]
+      properties:
+        source_id:
+          type: string
+        diff_id:
+          type: string
+        evaluated_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pass, fail]
+        summary:
+          type: object
+          required: [baseline_bytes, current_bytes, changed_bytes, diff_ratio, threshold]
+          properties:
+            baseline_bytes:
+              type: integer
+            current_bytes:
+              type: integer
+            changed_bytes:
+              type: integer
+            diff_ratio:
+              type: number
+            threshold:
+              type: number
+        artifacts:
+          type: object
+          required: [baseline_ref, current_ref, diff_ref]
+          properties:
+            baseline_ref:
+              type: string
+            current_ref:
+              type: string
+            diff_ref:
+              type: string
+
+    RuleViolationInput:
+      type: object
+      required: [rule_id, code, title, description, evidence, fix_hint]
+      properties:
+        rule_id:
+          type: string
+        code:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        evidence:
+          type: object
+          additionalProperties: true
+        fix_hint:
+          type: object
+          additionalProperties: true
+    LlmViolationRequest:
+      type: object
+      required: [violation]
+      properties:
+        violation:
+          $ref: '#/components/schemas/RuleViolationInput'
+        context:
+          type: object
+          additionalProperties: true
+    ViolationExplainResponse:
+      type: object
+      required: [source_id, explanation_id, generated_at, model, summary, rationale, evidence_citations, confidence]
+      properties:
+        source_id:
+          type: string
+        explanation_id:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+        model:
+          type: string
+        summary:
+          type: string
+        rationale:
+          type: string
+        evidence_citations:
+          type: array
+          items:
+            type: string
+        confidence:
+          type: number
+    ViolationFixSuggestResponse:
+      type: object
+      required: [source_id, suggestion_id, generated_at, model, suggested_changes, verification_steps]
+      properties:
+        source_id:
+          type: string
+        suggestion_id:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+        model:
+          type: string
+        suggested_changes:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        verification_steps:
+          type: array
+          items:
+            type: string

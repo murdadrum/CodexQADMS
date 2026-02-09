@@ -24,6 +24,10 @@ The repository currently includes:
 - Next.js React console with Firebase-auth gated import/audit/report actions
 - Report export UI wired to `POST /api/v1/sources/{source_id}/audits/report`
 - Local persistence for recent runs and filter presets (with recent-run detail drawer)
+- Storybook ingestion scaffold endpoint + contract (`/storybook/import`)
+- Visual diff scaffold endpoint + contract (`/audits/visual-diff`)
+- LLM explain/fix-suggest contract endpoints for violations
+- CI workflow for Python tests + web build + smoke test
 - Token normalization adapter for:
   - Tokens Studio-style grouped JSON
   - FigmaDMS `theme-config.json` shape (`colors[]`, `uiTokens`)
@@ -38,6 +42,7 @@ The repository currently includes:
 - `design` Figma links, component spec guidance, token handoff artifacts
 - `docs` handoff and project documentation
 - `tests` importer and rule behavior tests
+- `.github/workflows` CI workflows
 
 ## Planning and Tracking
 
