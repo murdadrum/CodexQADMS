@@ -1,7 +1,6 @@
-import dynamic from "next/dynamic";
 import Link from "next/link";
-
-const AuthPanel = dynamic(() => import("./auth-panel").then((m) => m.AuthPanel), { ssr: false });
+import { ConsolePanel } from "./console-panel";
+import { AuthPanel } from "./auth-panel";
 
 const Panel = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="rounded-2xl border border-line/70 bg-white/90 shadow-lg p-6 space-y-3">
@@ -15,16 +14,16 @@ export default function Home() {
     <main className="mx-auto max-w-5xl px-4 py-10 space-y-6">
       <header className="space-y-2">
         <p className="uppercase tracking-[0.14em] text-sm text-brand">QADMS</p>
-        <h1 className="text-3xl sm:text-4xl font-semibold text-ink">Next.js Console (in progress)</h1>
+        <h1 className="text-3xl sm:text-4xl font-semibold text-ink">Token Import Console</h1>
         <p className="text-slate-700 max-w-3xl">
-          We are migrating the token import and violations console to Next.js with Tailwind/shadcn. Use the static
-          console for now while this shell stabilizes.
+          Import Figma/Tokens Studio exports into the canonical token model, run rule audits, and inspect violation
+          details directly in the Next.js app.
         </p>
       </header>
 
       <div className="grid gap-5 md:grid-cols-2">
-        <Panel title="Static Console (current)">
-          <p className="text-sm text-slate-700">Run imports and rule audits via the existing static UI.</p>
+        <Panel title="Static Console (fallback)">
+          <p className="text-sm text-slate-700">The original HTML/JS console remains available during migration.</p>
           <Link
             href="/index.html"
             className="inline-flex w-fit items-center gap-2 rounded-lg bg-brand px-3 py-2 text-white font-medium shadow-sm"
@@ -47,12 +46,13 @@ export default function Home() {
       </div>
 
       <AuthPanel />
+      <ConsolePanel />
 
       <Panel title="Upcoming">
         <ul className="list-disc pl-5 text-sm text-slate-800 space-y-1">
-          <li>Port import + audit UI into React components.</li>
-          <li>Connect Firebase Auth (Google) for sign-in gating. (env needed)</li>
-          <li>Style with Tailwind + shadcn and keep the intentional visual direction.</li>
+          <li>Auth-gate write actions based on Firebase user context.</li>
+          <li>Persist recent imports/audits and filter presets.</li>
+          <li>Add report export action from the in-app violations view.</li>
         </ul>
       </Panel>
     </main>
