@@ -289,6 +289,7 @@ export function ConsolePanel() {
   const [filterSearch, setFilterSearch] = useState("");
   const [isExporting, setIsExporting] = useState(false);
   const [recentRuns, setRecentRuns] = useState<RecentRun[]>([]);
+  const [selectedRecentRun, setSelectedRecentRun] = useState<RecentRun | null>(null);
   const [filterPresets, setFilterPresets] = useState<FilterPreset[]>([]);
   const [presetName, setPresetName] = useState("");
 
@@ -533,12 +534,14 @@ export function ConsolePanel() {
     setApiBase(run.apiBase || "http://127.0.0.1:8000");
     setPayloadText(run.payloadText || JSON.stringify(defaultPayload, null, 2));
     setFileJson(null);
+    setSelectedRecentRun(null);
     setStatusTone("");
     setStatus(`Loaded recent run from ${new Date(run.timestamp).toLocaleString()}.`);
   }
 
   function clearRecentRuns() {
     setRecentRuns([]);
+    setSelectedRecentRun(null);
     writeStorageJson(STORAGE_RECENT_RUNS_KEY, []);
   }
 
@@ -764,13 +767,61 @@ export function ConsolePanel() {
                   </p>
                 </div>
                 <button
-                  onClick={() => loadRecentRun(run)}
+                  onClick={() => setSelectedRecentRun(run)}
                   className="rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-sm"
                 >
-                  Load
+                  Details
                 </button>
               </div>
             ))}
+          </div>
+        )}
+        {selectedRecentRun && (
+          <div className="rounded-lg border border-line bg-white p-3 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h3 className="text-sm font-semibold text-ink">Run Detail</h3>
+              <button
+                onClick={() => setSelectedRecentRun(null)}
+                className="rounded-lg border border-line bg-white px-2 py-1 text-xs text-slate-700"
+              >
+                Close
+              </button>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="rounded-lg border border-line bg-slate-50 px-2 py-2">
+                <p className="text-[11px] uppercase tracking-wide text-slate-600">Source ID</p>
+                <p className="font-mono text-xs text-slate-900">{selectedRecentRun.sourceId}</p>
+              </div>
+              <div className="rounded-lg border border-line bg-slate-50 px-2 py-2">
+                <p className="text-[11px] uppercase tracking-wide text-slate-600">Timestamp</p>
+                <p className="font-mono text-xs text-slate-900">{new Date(selectedRecentRun.timestamp).toLocaleString()}</p>
+              </div>
+              <div className="rounded-lg border border-line bg-slate-50 px-2 py-2">
+                <p className="text-[11px] uppercase tracking-wide text-slate-600">API Base</p>
+                <p className="font-mono text-xs text-slate-900">{selectedRecentRun.apiBase}</p>
+              </div>
+              <div className="rounded-lg border border-line bg-slate-50 px-2 py-2">
+                <p className="text-[11px] uppercase tracking-wide text-slate-600">Token Source</p>
+                <p className="font-mono text-xs text-slate-900">{selectedRecentRun.tokenSource}</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full border border-line bg-slate-50 px-2 py-1 font-mono text-xs text-slate-800">
+                violations: {selectedRecentRun.totalViolations}
+              </span>
+              <span className="rounded-full border border-line bg-slate-50 px-2 py-1 font-mono text-xs text-slate-800">
+                validation: {selectedRecentRun.validationValid ? "valid" : "issues"}
+              </span>
+              <span className="rounded-full border border-line bg-slate-50 px-2 py-1 font-mono text-xs text-slate-800">
+                payload chars: {selectedRecentRun.payloadText.length}
+              </span>
+            </div>
+            <button
+              onClick={() => loadRecentRun(selectedRecentRun)}
+              className="rounded-lg bg-brand px-3 py-2 text-xs font-semibold text-white shadow-sm"
+            >
+              Load This Run
+            </button>
           </div>
         )}
       </section>
