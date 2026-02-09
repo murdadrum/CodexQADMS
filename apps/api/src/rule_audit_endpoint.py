@@ -39,6 +39,31 @@ def _build_violation_payload(rule_id: str, violation: Any) -> dict[str, Any]:
     }
 
 
+def _evaluate_rules(payload: Any):
+    canonical, validation = normalize_figma_export(payload)
+    evaluations = [
+        evaluate_tokens_naming(canonical),
+        evaluate_tokens_scale(canonical),
+        evaluate_tokens_semantic_coverage(canonical),
+        evaluate_a11y_contrast(canonical),
+    ]
+    violations: list[dict[str, Any]] = []
+    for evaluation in evaluations:
+        for violation in evaluation.violations:
+            violations.append(_build_violation_payload(evaluation.rule_id, violation))
+
+    violations.sort(
+        key=lambda item: (
+            item["severity"],
+            item["category"],
+            item["rule_id"],
+            item["code"],
+            item["violation_id"],
+        )
+    )
+    return canonical, validation, violations
+
+
 def post_rule_audit(source_id: str, request_body: bytes) -> tuple[int, dict[str, Any]]:
     if not source_id or not source_id.strip():
         return error_response(
@@ -57,30 +82,7 @@ def post_rule_audit(source_id: str, request_body: bytes) -> tuple[int, dict[str,
         )
 
     try:
-        canonical, validation = normalize_figma_export(payload)
-        evaluations = [
-            evaluate_tokens_naming(canonical),
-            evaluate_tokens_scale(canonical),
-            evaluate_tokens_semantic_coverage(canonical),
-            evaluate_a11y_contrast(canonical),
-        ]
-
-        violations: list[dict[str, Any]] = []
-        for evaluation in evaluations:
-            for violation in evaluation.violations:
-                violations.append(_build_violation_payload(evaluation.rule_id, violation))
-
-        # Deterministic order for stable UI/test behavior.
-        violations.sort(
-            key=lambda item: (
-                item["severity"],
-                item["category"],
-                item["rule_id"],
-                item["code"],
-                item["violation_id"],
-            )
-        )
-
+        canonical, validation, violations = _evaluate_rules(payload)
         severity_counts = Counter(violation["severity"] for violation in violations)
         category_counts = Counter(violation["category"] for violation in violations)
         rule_counts = Counter(violation["rule_id"] for violation in violations)
@@ -118,3 +120,19 @@ def post_rule_audit(source_id: str, request_body: bytes) -> tuple[int, dict[str,
             code="internal_error",
             message="Unexpected server error while running rule audit.",
         )
+
+
+def post_rule_report(source_id: str, request_body: bytes) -> tuple[int, dict[str, Any]]:
+    """Export report.json payload (same structure as audit) for download."""
+    audit_status, audit_response = post_rule_audit(source_id, request_body)
+    if audit_status != 200:
+        return audit_status, audit_response
+
+    report = {
+        "source_id": audit_response["source_id"],
+        "audit_id": audit_response["audit_id"],
+        "generated_at": datetime.now(tz=timezone.utc).isoformat(),
+        "summary": audit_response["summary"],
+        "violations": audit_response["violations"],
+    }
+    return 200, report
