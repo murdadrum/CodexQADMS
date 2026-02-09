@@ -30,6 +30,7 @@ The repository currently includes:
 - CI workflow for Python tests + web build + smoke test
 - Deploy workflow scaffold with manual environment selection and dry-run mode
 - Terraform skeleton for Cloud Run-style deployments (`infra/terraform`)
+- Visual diff viewer panel in Next.js (calls `/audits/visual-diff`)
 - Token normalization adapter for:
   - Tokens Studio-style grouped JSON
   - FigmaDMS `theme-config.json` shape (`colors[]`, `uiTokens`)

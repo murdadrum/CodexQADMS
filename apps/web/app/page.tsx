@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ConsolePanel } from "./console-panel";
+import { VisualDiffPanel } from "./visual-diff-panel";
 import { AuthPanel } from "./auth-panel";
 
 const Panel = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -47,6 +48,7 @@ export default function Home() {
 
       <AuthPanel />
       <ConsolePanel />
+      <VisualDiffPanel />
 
       <Panel title="Upcoming">
         <ul className="list-disc pl-5 text-sm text-slate-800 space-y-1">

@@ -87,6 +87,7 @@ Progress note:
 - Storybook source ingestion contract + endpoint scaffold added.
 - Visual diff audit scaffold endpoint added with deterministic diff summary response.
 - Component-level frontend tests added for console persistence and restore flows.
+- Visual diff viewer panel added to Next.js UI.
 
 ### Milestone D: Integrations and CI/CD/Infra
 Status: In progress
