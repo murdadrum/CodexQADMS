@@ -62,6 +62,7 @@ Status: In progress
 
 Progress note:
 - `TOKENS_NAMING` deterministic rule implemented with evidence and machine-friendly fix hints.
+- `TOKENS_SCALE` deterministic rule implemented for spacing/typography anomalies.
 
 ### Milestone C: Components and Visual Regression
 Status: Not started
