@@ -59,6 +59,14 @@ type AuditResult = {
   violations: Violation[];
 };
 
+type ReportResult = {
+  source_id: string;
+  audit_id: string;
+  generated_at: string;
+  summary: AuditResult["summary"];
+  violations: Violation[];
+};
+
 const defaultPayload = {
   colors: [
     { name: "Primary", variable: "--primary", hsl: "hsl(160, 65%, 35%)", hex: "#1f936d" },
@@ -195,6 +203,26 @@ function mockAudit(importResult: ImportResult): AuditResult {
   };
 }
 
+function mockReport(auditResult: AuditResult): ReportResult {
+  return {
+    source_id: auditResult.source_id,
+    audit_id: auditResult.audit_id,
+    generated_at: new Date().toISOString(),
+    summary: auditResult.summary,
+    violations: auditResult.violations,
+  };
+}
+
+function downloadJson(filename: string, payload: unknown) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
 export function ConsolePanel() {
   const auth = getFirebaseAuth();
   const authConfigured = Boolean(auth);
@@ -213,6 +241,7 @@ export function ConsolePanel() {
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterRule, setFilterRule] = useState("all");
   const [filterSearch, setFilterSearch] = useState("");
+  const [isExporting, setIsExporting] = useState(false);
 
   const violations = auditResult?.violations ?? [];
 
@@ -281,6 +310,21 @@ export function ConsolePanel() {
   async function auditWithApi(nextSourceId: string, payload: unknown): Promise<AuditResult> {
     const base = apiBase.replace(/\/$/, "");
     const url = `${base}/api/v1/sources/${encodeURIComponent(nextSourceId)}/audits/rules`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const body = await response.json();
+    if (!response.ok) {
+      throw new Error(getApiErrorMessage(body, response.status));
+    }
+    return body;
+  }
+
+  async function reportWithApi(nextSourceId: string, payload: unknown): Promise<ReportResult> {
+    const base = apiBase.replace(/\/$/, "");
+    const url = `${base}/api/v1/sources/${encodeURIComponent(nextSourceId)}/audits/report`;
     const response = await fetch(url, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -379,6 +423,57 @@ export function ConsolePanel() {
     setSelectedViolation(null);
     setStatusTone("");
     setStatus("Default payload loaded.");
+  }
+
+  async function onExportReport() {
+    if (importDisabled) {
+      setStatusTone("error");
+      setStatus("Sign in with Google before exporting reports.");
+      return;
+    }
+
+    const nextSourceId = sourceId.trim();
+    if (!nextSourceId) {
+      setStatusTone("error");
+      setStatus("Source ID is required.");
+      return;
+    }
+
+    setIsExporting(true);
+    setStatusTone("");
+    setStatus("Generating report export...");
+
+    let payload: unknown;
+    try {
+      payload = await readPayload();
+    } catch (error: any) {
+      setStatusTone("error");
+      setStatus(`Invalid JSON: ${error?.message || "Failed to parse JSON"}`);
+      setIsExporting(false);
+      return;
+    }
+
+    try {
+      const report = await reportWithApi(nextSourceId, payload);
+      downloadJson(`${nextSourceId}-report-${Date.now()}.json`, report);
+      setStatusTone("");
+      setStatus("Report exported using live API.");
+      setIsExporting(false);
+      return;
+    } catch (error: any) {
+      if (!useMockFallback || !auditResult) {
+        setStatusTone("error");
+        setStatus(`Report export failed: ${error?.message || "Unknown error"}`);
+        setIsExporting(false);
+        return;
+      }
+    }
+
+    const localReport = mockReport(auditResult);
+    downloadJson(`${nextSourceId}-report-mock-${Date.now()}.json`, localReport);
+    setStatusTone("warn");
+    setStatus("Report API unavailable. Exported mock report from current audit results.");
+    setIsExporting(false);
   }
 
   return (
@@ -577,7 +672,19 @@ export function ConsolePanel() {
 
       {auditResult && (
         <section className="rounded-2xl border border-line/70 bg-white/90 p-6 shadow-lg space-y-4">
-          <h2 className="text-xl font-semibold text-ink">Violations</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-xl font-semibold text-ink">Violations</h2>
+            <button
+              onClick={onExportReport}
+              disabled={isExporting || importDisabled}
+              className={[
+                "rounded-lg px-3 py-2 text-sm font-semibold shadow-sm",
+                isExporting || importDisabled ? "cursor-not-allowed bg-slate-300 text-slate-600" : "bg-brand text-white",
+              ].join(" ")}
+            >
+              {isExporting ? "Exporting..." : "Export Report JSON"}
+            </button>
+          </div>
           <div className="flex flex-wrap gap-2">
             <span className="rounded-full border border-line bg-slate-50 px-3 py-1 font-mono text-xs text-slate-800">
               total: {auditResult.summary?.total_violations ?? 0}
