@@ -11,6 +11,16 @@ on:
         options:
           - staging
           - production
+      project_id:
+        description: "GCP project id"
+        required: true
+        default: "notional-radio-474312-d4"
+        type: string
+      region:
+        description: "GCP region (use us-central1 for GCP)"
+        required: true
+        default: "us-central1"
+        type: string
       deploy_api:
         description: "Deploy API service"
         required: true
@@ -26,6 +36,26 @@ on:
         required: true
         default: true
         type: boolean
+      api_image:
+        description: "Container image for API (fully qualified)"
+        required: true
+        default: "gcr.io/notional-radio-474312-d4/qadms-api:latest"
+        type: string
+      web_image:
+        description: "Container image for web (fully qualified)"
+        required: true
+        default: "gcr.io/notional-radio-474312-d4/qadms-web:latest"
+        type: string
+      api_env:
+        description: "API env vars as comma-separated KEY=VALUE"
+        required: false
+        default: ""
+        type: string
+      web_env:
+        description: "Web env vars as comma-separated KEY=VALUE"
+        required: false
+        default: ""
+        type: string
 
 concurrency:
   group: deploy-${{ github.event.inputs.environment }}
@@ -50,11 +80,19 @@ jobs:
           echo "deploy_api=${{ github.event.inputs.deploy_api }}" >> "$GITHUB_OUTPUT"
           echo "deploy_web=${{ github.event.inputs.deploy_web }}" >> "$GITHUB_OUTPUT"
           echo "dry_run=${{ github.event.inputs.dry_run }}" >> "$GITHUB_OUTPUT"
+          echo "project_id=${{ github.event.inputs.project_id }}" >> "$GITHUB_OUTPUT"
+          echo "region=${{ github.event.inputs.region }}" >> "$GITHUB_OUTPUT"
+          echo "api_image=${{ github.event.inputs.api_image }}" >> "$GITHUB_OUTPUT"
+          echo "web_image=${{ github.event.inputs.web_image }}" >> "$GITHUB_OUTPUT"
+          echo "api_env=${{ github.event.inputs.api_env }}" >> "$GITHUB_OUTPUT"
+          echo "web_env=${{ github.event.inputs.web_env }}" >> "$GITHUB_OUTPUT"
 
       - name: Deploy summary
         run: |
           echo "Deploy scaffold triggered."
           echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Project:     ${{ github.event.inputs.project_id }}"
+          echo "Region:      ${{ github.event.inputs.region }}"
           echo "Deploy API:  ${{ github.event.inputs.deploy_api }}"
           echo "Deploy Web:  ${{ github.event.inputs.deploy_web }}"
           echo "Dry run:     ${{ github.event.inputs.dry_run }}"
@@ -120,7 +158,26 @@ jobs:
     runs-on: ubuntu-latest
     needs: [preflight, build-api, build-web]
     if: always() && needs.preflight.result == 'success'
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud (OIDC)
+        if: needs.preflight.outputs.dry_run != 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup gcloud
+        if: needs.preflight.outputs.dry_run != 'true'
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ needs.preflight.outputs.project_id }}
+
       - name: Download API artifact
         if: needs.preflight.outputs.deploy_api == 'true'
         uses: actions/download-artifact@v4
@@ -139,11 +196,37 @@ jobs:
         if: needs.preflight.outputs.dry_run == 'true'
         run: |
           echo "Dry run enabled. No cloud provider deployment commands executed."
-          echo "Next step: replace this block with provider CLI deploy commands."
+          echo "Target project: ${{ needs.preflight.outputs.project_id }}"
+          echo "Region:         ${{ needs.preflight.outputs.region }}"
+          echo "API image:      ${{ needs.preflight.outputs.api_image }}"
+          echo "Web image:      ${{ needs.preflight.outputs.web_image }}"
+          echo "API env:        ${{ needs.preflight.outputs.api_env }}"
+          echo "Web env:        ${{ needs.preflight.outputs.web_env }}"
 
-      - name: Deploy placeholder
-        if: needs.preflight.outputs.dry_run != 'true'
+      - name: Deploy API to Cloud Run
+        if: needs.preflight.outputs.dry_run != 'true' && needs.preflight.outputs.deploy_api == 'true'
         run: |
-          echo "Real deployment is not wired yet."
-          echo "Integrate provider auth + CLI in this job."
-          exit 1
+          FLAGS=()
+          if [ -n "${{ needs.preflight.outputs.api_env }}" ]; then
+            FLAGS+=(--set-env-vars "${{ needs.preflight.outputs.api_env }}")
+          fi
+          gcloud run deploy "qadms-api-${{ needs.preflight.outputs.environment }}" \
+            --image "${{ needs.preflight.outputs.api_image }}" \
+            --region "${{ needs.preflight.outputs.region }}" \
+            --project "${{ needs.preflight.outputs.project_id }}" \
+            --allow-unauthenticated \
+            "${FLAGS[@]}"
+
+      - name: Deploy Web to Cloud Run
+        if: needs.preflight.outputs.dry_run != 'true' && needs.preflight.outputs.deploy_web == 'true'
+        run: |
+          FLAGS=()
+          if [ -n "${{ needs.preflight.outputs.web_env }}" ]; then
+            FLAGS+=(--set-env-vars "${{ needs.preflight.outputs.web_env }}")
+          fi
+          gcloud run deploy "qadms-web-${{ needs.preflight.outputs.environment }}" \
+            --image "${{ needs.preflight.outputs.web_image }}" \
+            --region "${{ needs.preflight.outputs.region }}" \
+            --project "${{ needs.preflight.outputs.project_id }}" \
+            --allow-unauthenticated \
+            "${FLAGS[@]}"

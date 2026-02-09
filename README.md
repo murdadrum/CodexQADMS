@@ -47,6 +47,7 @@ The repository currently includes:
 - `tests` importer and rule behavior tests
 - `.github/workflows` CI workflows
 - `infra/terraform` IaC baseline
+- `docs/deploy-gcp.md` deployment setup guide
 
 ## Planning and Tracking
 

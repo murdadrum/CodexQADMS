@@ -99,6 +99,7 @@ Progress note:
 - GitHub Actions CI workflow added for unit tests, web build, and smoke test.
 - Deploy workflow scaffold added with environment inputs, artifacts, and dry-run safety mode.
 - Terraform skeleton directories added (modules + per-environment roots).
+- Deploy workflow wired for GCP Cloud Run with OIDC auth and image-based deploy.
 
 ### Milestone E: LLM Add-ons
 Status: In progress
