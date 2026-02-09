@@ -152,6 +152,33 @@
           </table>
         </div>
       </section>
+
+      <section class="panel" id="violationDetailPanel" hidden>
+        <h2>Violation Detail</h2>
+        <p id="violationDetailTitle" class="detail-title">Select a violation to see details.</p>
+        <dl class="detail-grid">
+          <div>
+            <dt>Rule</dt>
+            <dd id="detailRule">-</dd>
+          </div>
+          <div>
+            <dt>Code</dt>
+            <dd id="detailCode">-</dd>
+          </div>
+          <div>
+            <dt>Severity</dt>
+            <dd id="detailSeverity">-</dd>
+          </div>
+          <div>
+            <dt>Category</dt>
+            <dd id="detailCategory">-</dd>
+          </div>
+        </dl>
+        <h3>Evidence</h3>
+        <pre id="detailEvidence" class="detail-pre">-</pre>
+        <h3>Fix Hint</h3>
+        <pre id="detailFix" class="detail-pre">-</pre>
+      </section>
     </main>
 
     <script type="module" src="./app.js"></script>

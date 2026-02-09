@@ -46,6 +46,14 @@ const el = {
   filterRule: document.getElementById("filterRule"),
   filterSearch: document.getElementById("filterSearch"),
   violationRows: document.getElementById("violationRows"),
+  violationDetailPanel: document.getElementById("violationDetailPanel"),
+  violationDetailTitle: document.getElementById("violationDetailTitle"),
+  detailRule: document.getElementById("detailRule"),
+  detailCode: document.getElementById("detailCode"),
+  detailSeverity: document.getElementById("detailSeverity"),
+  detailCategory: document.getElementById("detailCategory"),
+  detailEvidence: document.getElementById("detailEvidence"),
+  detailFix: document.getElementById("detailFix"),
 };
 
 el.payload.value = JSON.stringify(defaultPayload, null, 2);
@@ -316,6 +324,7 @@ function renderViolationRows(violations) {
     evidence.textContent = evidenceBits.join(" | ") || "-";
 
     tr.append(severity, category, rule, code, title, evidence);
+    tr.addEventListener("click", () => renderViolationDetail(violation));
     el.violationRows.appendChild(tr);
   });
 }
@@ -403,6 +412,19 @@ function renderResult(result) {
   renderRows(result.token_version?.tokens || []);
 }
 
+function renderViolationDetail(violation) {
+  state.selectedViolation = violation;
+  el.violationDetailPanel.hidden = false;
+
+  el.violationDetailTitle.textContent = violation.title || "Violation";
+  el.detailRule.textContent = violation.rule_id || "-";
+  el.detailCode.textContent = violation.code || "-";
+  el.detailSeverity.textContent = violation.severity || "-";
+  el.detailCategory.textContent = violation.category || "-";
+  el.detailEvidence.textContent = JSON.stringify(violation.evidence || {}, null, 2);
+  el.detailFix.textContent = JSON.stringify(violation.fix_hint || {}, null, 2);
+}
+
 async function onImportClick() {
   const sourceId = el.sourceId.value.trim();
   if (!sourceId) {
@@ -469,6 +491,9 @@ el.resetBtn.addEventListener("click", () => {
   el.filterCategory.value = "all";
   el.filterRule.value = "all";
   el.filterSearch.value = "";
+  el.violationDetailPanel.hidden = true;
+  el.violationRows.innerHTML = "";
+  el.violationSummary.innerHTML = "";
   setStatus("Default payload loaded.");
 });
 

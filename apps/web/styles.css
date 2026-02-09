@@ -108,6 +108,48 @@ select {
   background: #fff;
 }
 
+.detail-title {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.6rem;
+  margin: 0 0 0.8rem;
+}
+
+.detail-grid div {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.55rem;
+}
+
+.detail-grid dt {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4f7063;
+}
+
+.detail-grid dd {
+  margin: 0.25rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.detail-pre {
+  background: #f8fbf8;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 textarea {
   min-height: 12rem;
   font-family: var(--mono);

@@ -66,6 +66,7 @@ Progress note:
 - `TOKENS_SEMANTIC_COVERAGE` deterministic rule implemented for interactive state coverage.
 - `A11Y_CONTRAST` deterministic rule implemented using WCAG AA ratio checks.
 - Violations list UI implemented with live API-backed filtering (severity/category/rule/search).
+- Violation detail panel added with evidence and fix hints.
 
 ### Milestone C: Components and Visual Regression
 Status: Not started
