@@ -6,18 +6,29 @@ from .figma_import_endpoint import post_tokens_import_figma
 
 try:
     from fastapi import Body, FastAPI, Path
+    from fastapi.middleware.cors import CORSMiddleware
     from fastapi.responses import JSONResponse
 except ImportError:  # pragma: no cover - optional runtime dependency
-    Body = FastAPI = Path = JSONResponse = None
+    Body = FastAPI = Path = CORSMiddleware = JSONResponse = None
 
 
 def create_app() -> "FastAPI":
-    if FastAPI is None or JSONResponse is None:
+    if FastAPI is None or JSONResponse is None or CORSMiddleware is None:
         raise RuntimeError(
             "fastapi is not installed. Install fastapi and uvicorn to run the HTTP API wrapper."
         )
 
     app = FastAPI(title="QADMS API", version="0.1.0")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    @app.get("/health")
+    def health() -> dict[str, str]:
+        return {"status": "ok"}
 
     @app.post("/api/v1/sources/{source_id}/tokens/import/figma")
     def import_figma_tokens(

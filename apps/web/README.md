@@ -11,6 +11,22 @@ Token import and provenance UI prototype for QADMS.
 
 ## Run
 
+Preferred (API + web together):
+
+```bash
+cd /Users/murdadrum/QADMS
+./scripts/run_local_stack.sh
+```
+
+If default ports are already in use:
+
+```bash
+cd /Users/murdadrum/QADMS
+API_PORT=18000 WEB_PORT=14173 ./scripts/run_local_stack.sh
+```
+
+Web-only:
+
 ```bash
 cd /Users/murdadrum/QADMS/apps/web
 python3 -m http.server 4173

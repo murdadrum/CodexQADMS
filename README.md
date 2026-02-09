@@ -36,6 +36,20 @@ The repository currently includes:
 python3 -m unittest -v tests.test_figma_import
 ```
 
+## Run Local Stack (API + Web)
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r apps/api/requirements.txt
+./scripts/run_local_stack.sh
+```
+
+- API health: `http://127.0.0.1:8000/health`
+- Web UI: `http://127.0.0.1:4173`
+- If either port is busy, override at launch:
+  - `API_PORT=18000 WEB_PORT=14173 ./scripts/run_local_stack.sh`
+
 ## Hybrid Workflow Rule
 
 - Figma prototypes and component documentation are sources of truth for design intent.
