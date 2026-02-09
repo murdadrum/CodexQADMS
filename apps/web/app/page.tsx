@@ -1,4 +1,7 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
+
+const AuthPanel = dynamic(() => import("./auth-panel").then((m) => m.AuthPanel), { ssr: false });
 
 const Panel = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="rounded-2xl border border-line/70 bg-white/90 shadow-lg p-6 space-y-3">
@@ -43,10 +46,12 @@ export default function Home() {
         </Panel>
       </div>
 
+      <AuthPanel />
+
       <Panel title="Upcoming">
         <ul className="list-disc pl-5 text-sm text-slate-800 space-y-1">
           <li>Port import + audit UI into React components.</li>
-          <li>Connect Firebase Auth (Google) for sign-in gating.</li>
+          <li>Connect Firebase Auth (Google) for sign-in gating. (env needed)</li>
           <li>Style with Tailwind + shadcn and keep the intentional visual direction.</li>
         </ul>
       </Panel>

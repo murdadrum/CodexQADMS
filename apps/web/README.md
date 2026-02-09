@@ -17,7 +17,12 @@ npm run dev
 - Next.js 15 (App Router)
 - Tailwind CSS
 - Custom gradient theme (matching current static console feel)
+-
+- Firebase Auth (Google) stub included; configure env vars to enable sign-in.
 
 ## Notes
 - Keep static files for now (`index.html`, `app.js`, `styles.css`) until the React version reaches feature parity.
-- Firebase Auth (Google) will be wired next.
+- Env needed for Firebase (create `.env.local` in `apps/web`):
+  - `NEXT_PUBLIC_FIREBASE_API_KEY`
+  - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+  - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
