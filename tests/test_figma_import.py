@@ -15,6 +15,23 @@ FIXTURES = ROOT / "design" / "tokens" / "figma"
 
 
 class FigmaImportTests(unittest.TestCase):
+    def test_invalid_json_returns_error_envelope(self) -> None:
+        status, response = post_tokens_import_figma("source-demo", b"{ not valid")
+
+        self.assertEqual(status, 400)
+        self.assertIn("error", response)
+        self.assertEqual(response["error"]["code"], "invalid_json")
+        self.assertIsInstance(response["error"]["details"], dict)
+
+    def test_invalid_source_id_returns_error_envelope(self) -> None:
+        payload = (FIXTURES / "sample-figma-tokens.json").read_bytes()
+        status, response = post_tokens_import_figma("   ", payload)
+
+        self.assertEqual(status, 400)
+        self.assertIn("error", response)
+        self.assertEqual(response["error"]["code"], "invalid_source_id")
+        self.assertIsInstance(response["error"]["details"], dict)
+
     def test_valid_figma_import_normalizes_successfully(self) -> None:
         payload = (FIXTURES / "sample-figma-tokens.json").read_bytes()
 

@@ -28,14 +28,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImportResponse'
+        '400':
+          description: Invalid request payload or path parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
         '422':
           description: Import payload is syntactically valid JSON but fails token validation.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ImportResponse'
+        '500':
+          description: Unexpected server error while processing import.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
+    ErrorBody:
+      type: object
+      required: [code, message, details]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorBody'
     ValidationIssue:
       type: object
       required: [path, message]

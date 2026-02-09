@@ -10,6 +10,20 @@ Persistence contract draft is documented in `docs/persistence-contract.md`.
 - `GET /health`
 - `POST /api/v1/sources/{source_id}/tokens/import/figma`
 
+## Error Envelope
+
+For hard request failures (`400`) and unexpected failures (`500`), API returns:
+
+```json
+{
+  "error": {
+    "code": "string_code",
+    "message": "human-readable message",
+    "details": {}
+  }
+}
+```
+
 ## Run
 
 ```bash

@@ -45,13 +45,14 @@ Status: In progress
   - Import endpoint contract and implementation.
   - Persistence contract draft (schema + API mapping).
   - DB-ready in-memory import persistence adapter and endpoint mapping.
+  - Stable machine-readable error envelope for endpoint hard failures.
   - Normalization adapter with validation reporting.
   - Unit tests for valid/invalid import and canonical parity.
   - Web provenance console.
   - Local runner and smoke test script.
 - Remaining:
   - Formal source/version persistence layer (DB).
-  - API error contract hardening and pagination-ready response envelopes.
+  - Pagination-ready response envelopes for list endpoints.
 
 ### Milestone B: Rule Engine and Core UX
 Status: Not started
